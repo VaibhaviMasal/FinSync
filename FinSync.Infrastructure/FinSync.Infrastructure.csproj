@@ -12,4 +12,9 @@
     <ProjectReference Include="..\FinSync.Shared\FinSync.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="External\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
