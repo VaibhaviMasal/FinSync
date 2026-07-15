@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="FinSync.API/FinSync.API.csproj" />
+  <Project Path="FinSync.Application/FinSync.Application.csproj" />
+  <Project Path="FinSync.Domain/FinSync.Domain.csproj" />
+  <Project Path="FinSync.Infrastructure/FinSync.Infrastructure.csproj" />
+  <Project Path="FinSync.Persistance/FinSync.Persistence.csproj" />
+  <Project Path="FinSync.Shared/FinSync.Shared.csproj" />
+</Solution>
