@@ -1,7 +1,7 @@
-using FinSync.Application.Interfaces;
-using FinSync.Application.Mappings;
-using FinSync.Application.Services;
-using FinSync.Domain.Interfaces;
+using FinSync.Application.Features.Customers.Interfaces;
+using FinSync.Application.Features.Customers.Mappings;
+using FinSync.Application.Features.Customers.Services;
+
 using FinSync.Persistence.Context;
 using FinSync.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;

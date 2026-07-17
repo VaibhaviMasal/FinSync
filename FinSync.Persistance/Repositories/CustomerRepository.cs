@@ -1,8 +1,7 @@
 ﻿using FinSync.Domain.Entities;
-using FinSync.Domain.Interfaces;
-using FinSync.Persistence.Context; 
+using FinSync.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-
+using FinSync.Application.Features.Customers.Interfaces;
 
 namespace FinSync.Persistence.Repositories
 {
@@ -14,6 +13,7 @@ namespace FinSync.Persistence.Repositories
         {
             _context = context;
         }
+
         public async Task<Customer> AddAsync(Customer customer)
         {
             await _context.Customers.AddAsync(customer);
@@ -21,25 +21,26 @@ namespace FinSync.Persistence.Repositories
             return customer;
         }
 
-        public Task<bool> DeleteAsync(int customerId)
+        public async Task<IEnumerable<Customer>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Customers.ToListAsync();
         }
 
-        public Task<IEnumerable<Customer>> GetAllAsync()
+        public async Task<Customer?> GetByIdAsync(int customerId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Customer?> GetByIdAsync(int customerId)
-        {
-            throw new NotImplementedException();
+            return await _context.Customers
+               .AsNoTracking()
+               .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
 
         public Task<Customer> UpdateAsync(Customer customer)
         {
             throw new NotImplementedException();
         }
-    }
 
+        public Task<bool> DeleteAsync(int customerId)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

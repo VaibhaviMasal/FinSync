@@ -1,5 +1,5 @@
-﻿using FinSync.Application.DTOs.Customer;
-using FinSync.Application.Interfaces;
+﻿using FinSync.Application.Features.Customers.DTOs;
+using FinSync.Application.Features.Customers.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinSync.API.Controllers
@@ -15,12 +15,40 @@ namespace FinSync.API.Controllers
             _customerService = customerService;
         }
 
+        // POST: api/Customer
         [HttpPost]
-        public async Task<IActionResult> CreateCustomer(
-    [FromBody] CreateCustomerRequestDto request)
+        public async Task<IActionResult> CreateCustomer(CreateCustomerRequestDto request)
         {
-            var response = await _customerService.CreateCustomerAsync(request);
-            return Ok(response);
+            var createdCustomer = await _customerService.CreateCustomerAsync(request);
+
+            return CreatedAtAction(
+                nameof(GetCustomerById),
+                new { id = createdCustomer.CustomerId },
+                createdCustomer);
+        }
+
+        // GET: api/Customer
+        [HttpGet]
+        public async Task<IActionResult> GetAllCustomers()
+        {
+            var customers = await _customerService.GetAllAsync();
+
+            return Ok(customers);
+        }
+
+        // GET: api/Customer/1
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCustomerById(int id)
+        {
+            var customer = await _customerService.GetByIdAsync(id);
+
+            if (customer == null)
+                return NotFound(new
+                {
+                    Message = $"Customer with Id {id} not found."
+                });
+
+            return Ok(customer);
         }
     }
 }

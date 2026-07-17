@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using FinSync.Application.DTOs.Customer;
+using FinSync.Application.Features.Customers.DTOs;
 using FinSync.Domain.Entities;
 
-namespace FinSync.Application.Mappings
+namespace FinSync.Application.Features.Customers.Mappings
 {
     public class CustomerMappingProfile : Profile
     {

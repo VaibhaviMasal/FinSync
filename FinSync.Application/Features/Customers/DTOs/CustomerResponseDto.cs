@@ -1,6 +1,6 @@
 ﻿using FinSync.Domain.Enums;
 
-namespace FinSync.Application.DTOs.Customer
+namespace FinSync.Application.Features.Customers.DTOs
 {
     public class CustomerResponseDto
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinSync.Application.DTOs.Customer
+namespace FinSync.Application.Features.Customers.DTOs
 {
     public class UpdateCustomerRequestDto
     {
