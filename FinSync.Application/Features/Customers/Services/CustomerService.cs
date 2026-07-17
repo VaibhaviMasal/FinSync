@@ -46,5 +46,19 @@ namespace FinSync.Application.Features.Customers.Services
 
             return _mapper.Map<CustomerResponseDto>(customer);
         }
+
+        // Update Customer
+
+          public async Task<CustomerResponseDto?> UpdateCustomerAsync(int customerId, UpdateCustomerRequestDto request)
+        {
+            var customer = _mapper.Map<Customer>(request);
+
+            var updatedCustomer = await _customerRepository.UpdateAsync(customerId, customer);
+
+            if (updatedCustomer == null)
+                return null;
+
+            return _mapper.Map<CustomerResponseDto>(updatedCustomer);
+        }
     }
-}
+    }

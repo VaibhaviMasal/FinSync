@@ -49,6 +49,22 @@ namespace FinSync.API.Controllers
                 });
 
             return Ok(customer);
+
+        } 
+            [HttpPut("{id}")]
+            public async Task<IActionResult> UpdateCustomer(int id, UpdateCustomerRequestDto request)
+            {
+                var customer = await _customerService.UpdateCustomerAsync(id, request);
+
+                if (customer == null)
+                {
+                    return NotFound(new
+                    {
+                        Message = $"Customer with Id {id} not found."
+                    });
+                }
+
+                return Ok(customer);
+            }
         }
     }
-}

@@ -22,7 +22,8 @@ namespace FinSync.Application.Features.Customers.Mappings
             // Customer Response
             CreateMap<Customer, CustomerResponseDto>();
 
-            // We'll add UpdateCustomer mapping later when we implement that feature.
+            //  UpdateCustomer 
+            CreateMap<UpdateCustomerRequestDto, Customer>();
         }
     }
 }

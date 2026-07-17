@@ -10,7 +10,7 @@ public interface ICustomerRepository
 
     Task<Customer?> GetByIdAsync(int customerId);
 
-    Task<Customer> UpdateAsync(Customer customer);
+    Task<Customer?> UpdateAsync(int customerId, Customer customer);
 
     Task<bool> DeleteAsync(int customerId);
 }

@@ -33,9 +33,39 @@ namespace FinSync.Persistence.Repositories
                .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
 
-        public Task<Customer> UpdateAsync(Customer customer)
+        public async Task<Customer?> UpdateAsync(int customerId, Customer customer)
         {
-            throw new NotImplementedException();
+            var existingCustomer = await _context.Customers.FindAsync(customerId);
+
+            if (existingCustomer == null)
+                return null;
+
+            existingCustomer.FirstName = customer.FirstName;
+            existingCustomer.MiddleName = customer.MiddleName;
+            existingCustomer.LastName = customer.LastName;
+            existingCustomer.Gender = customer.Gender;
+            existingCustomer.DateOfBirth = customer.DateOfBirth;
+            existingCustomer.MobileNumber = customer.MobileNumber;
+            existingCustomer.AlternateMobileNumber = customer.AlternateMobileNumber;
+            existingCustomer.Email = customer.Email;
+            existingCustomer.Address = customer.Address;
+            existingCustomer.City = customer.City;
+            existingCustomer.State = customer.State;
+            existingCustomer.Pincode = customer.Pincode;
+            existingCustomer.PanNumber = customer.PanNumber;
+            existingCustomer.AadhaarNumber = customer.AadhaarNumber;
+            existingCustomer.Occupation = customer.Occupation;
+            existingCustomer.CompanyName = customer.CompanyName;
+            existingCustomer.AnnualIncome = customer.AnnualIncome;
+            existingCustomer.Remarks = customer.Remarks;
+
+            await _context.SaveChangesAsync();
+
+            return existingCustomer;
+
+            await _context.SaveChangesAsync();
+
+            return existingCustomer;
         }
 
         public Task<bool> DeleteAsync(int customerId)
