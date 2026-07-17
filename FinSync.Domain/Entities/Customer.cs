@@ -8,9 +8,9 @@ public class Customer
 
     // Personal Information
     public required string FirstName { get; set; }
+    public string? MiddleName { get; set; }
     public required string LastName { get; set; }
-    public required string MobileNumber { get; set; }
-    public required string Email { get; set; }
+    
     public required DateTime DateOfBirth { get; set; }
     public required Gender Gender { get; set; }
     
@@ -28,13 +28,15 @@ public class Customer
 
     // Contact Details
     public string? AlternateMobileNumber { get; set; }
+    public required string MobileNumber { get; set; }
+    public required string Email { get; set; }
 
 
     // Address
-    public string? Address { get; set; }
-    public string? City { get; set; }
-    public string? State { get; set; }
-    public string? Pincode { get; set; }
+    public required string Address { get; set; }
+    public required string City { get; set; }
+    public required string State { get; set; }
+    public required string Pincode { get; set; }
 
 
     // Additional Information

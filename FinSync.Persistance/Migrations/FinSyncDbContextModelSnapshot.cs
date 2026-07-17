@@ -35,6 +35,7 @@ namespace FinSync.Persistence.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("AlternateMobileNumber")
@@ -44,6 +45,7 @@ namespace FinSync.Persistence.Migrations
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("CompanyName")
@@ -73,6 +75,9 @@ namespace FinSync.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("MiddleName")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("MobileNumber")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -85,12 +90,14 @@ namespace FinSync.Persistence.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Pincode")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Remarks")
                         .HasColumnType("longtext");
 
                     b.Property<string>("State")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedDate")
