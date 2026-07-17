@@ -51,6 +51,8 @@ namespace FinSync.API.Controllers
             return Ok(customer);
 
         } 
+
+        // PUT: api/Customer/{id}
             [HttpPut("{id}")]
             public async Task<IActionResult> UpdateCustomer(int id, UpdateCustomerRequestDto request)
             {
@@ -66,5 +68,24 @@ namespace FinSync.API.Controllers
 
                 return Ok(customer);
             }
+
+
+
+        // DELETE : api/Customer/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCustomer(int id)
+        {
+            var deleted = await _customerService.DeleteCustomerAsync(id);
+
+            if (!deleted)
+            {
+                return NotFound(new
+                {
+                    Message = $"Customer with Id {id} not found."
+                });
+            }
+
+            return NoContent();
         }
+    }
     }

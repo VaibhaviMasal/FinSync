@@ -68,9 +68,18 @@ namespace FinSync.Persistence.Repositories
             return existingCustomer;
         }
 
-        public Task<bool> DeleteAsync(int customerId)
+        public async Task<bool> DeleteAsync(int customerId)
         {
-            throw new NotImplementedException();
+            var customer = await _context.Customers.FindAsync(customerId);
+
+            if (customer == null)
+                return false;
+
+            _context.Customers.Remove(customer);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

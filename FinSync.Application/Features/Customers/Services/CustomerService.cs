@@ -60,5 +60,12 @@ namespace FinSync.Application.Features.Customers.Services
 
             return _mapper.Map<CustomerResponseDto>(updatedCustomer);
         }
+
+        // Delete Customer
+
+        public async Task<bool> DeleteCustomerAsync(int customerId)
+        {
+            return await _customerRepository.DeleteAsync(customerId);
+        }
     }
     }

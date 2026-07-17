@@ -11,5 +11,7 @@ namespace FinSync.Application.Features.Customers.Interfaces
         Task<CustomerResponseDto?> GetByIdAsync(int customerId);
 
         Task<CustomerResponseDto?> UpdateCustomerAsync(int customerId, UpdateCustomerRequestDto request);
+
+        Task<bool> DeleteCustomerAsync(int customerId);
     }
 }
