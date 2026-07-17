@@ -1,4 +1,5 @@
-﻿using FinSync.Domain.Entities;
+﻿using FinSync.Application.Features.Customers.DTOs;
+using FinSync.Domain.Entities;
 
 namespace FinSync.Application.Features.Customers.Interfaces;
 
@@ -6,7 +7,7 @@ public interface ICustomerRepository
 {
     Task<Customer> AddAsync(Customer customer);
 
-    Task<IEnumerable<Customer>> GetAllAsync();
+    
 
     Task<Customer?> GetByIdAsync(int customerId);
 
@@ -15,5 +16,7 @@ public interface ICustomerRepository
     Task<bool> DeleteAsync(int customerId);
 
     Task<IEnumerable<Customer>> SearchAsync(string keyword);
+
+    Task<IEnumerable<Customer>> GetAllAsync(CustomerQueryParametersDto queryParameters);
 
 }

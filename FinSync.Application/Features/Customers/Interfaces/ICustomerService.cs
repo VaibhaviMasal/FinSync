@@ -6,7 +6,7 @@ namespace FinSync.Application.Features.Customers.Interfaces
     {
         Task<CustomerResponseDto> CreateCustomerAsync(CreateCustomerRequestDto request);
 
-        Task<IEnumerable<CustomerResponseDto>> GetAllAsync();
+        Task<IEnumerable<CustomerResponseDto>> GetAllAsync(CustomerQueryParametersDto queryParameters);
 
         Task<CustomerResponseDto?> GetByIdAsync(int customerId);
 

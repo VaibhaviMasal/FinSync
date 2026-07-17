@@ -29,49 +29,51 @@ namespace FinSync.API.Controllers
 
         // GET: api/Customer
         [HttpGet]
-        public async Task<IActionResult> GetAllCustomers()
+        public async Task<IActionResult> GetAllCustomers(
+            [FromQuery] CustomerQueryParametersDto queryParameters)
         {
-            var customers = await _customerService.GetAllAsync();
+            var customers = await _customerService.GetAllAsync(queryParameters);
 
             return Ok(customers);
         }
 
-        // GET: api/Customer/1
+        // GET: api/Customer/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomerById(int id)
         {
             var customer = await _customerService.GetByIdAsync(id);
 
             if (customer == null)
+            {
                 return NotFound(new
                 {
                     Message = $"Customer with Id {id} not found."
                 });
-
-            return Ok(customer);
-
-        } 
-
-        // PUT: api/Customer/{id}
-            [HttpPut("{id}")]
-            public async Task<IActionResult> UpdateCustomer(int id, UpdateCustomerRequestDto request)
-            {
-                var customer = await _customerService.UpdateCustomerAsync(id, request);
-
-                if (customer == null)
-                {
-                    return NotFound(new
-                    {
-                        Message = $"Customer with Id {id} not found."
-                    });
-                }
-
-                return Ok(customer);
             }
 
+            return Ok(customer);
+        }
 
+        // PUT: api/Customer/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCustomer(
+            int id,
+            [FromBody] UpdateCustomerRequestDto request)
+        {
+            var customer = await _customerService.UpdateCustomerAsync(id, request);
 
-        // DELETE : api/Customer/{id}
+            if (customer == null)
+            {
+                return NotFound(new
+                {
+                    Message = $"Customer with Id {id} not found."
+                });
+            }
+
+            return Ok(customer);
+        }
+
+        // DELETE: api/Customer/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
@@ -88,14 +90,13 @@ namespace FinSync.API.Controllers
             return NoContent();
         }
 
-
-        // GET: api/Customer/search
+        // GET: api/Customer/search?keyword=aarav
         [HttpGet("search")]
-        public async Task<IActionResult> SearchCustomer(string keyword)
+        public async Task<IActionResult> SearchCustomer([FromQuery] string keyword)
         {
             var customers = await _customerService.SearchCustomerAsync(keyword);
 
             return Ok(customers);
         }
     }
-    }
+}

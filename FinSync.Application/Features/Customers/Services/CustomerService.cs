@@ -29,9 +29,9 @@ namespace FinSync.Application.Features.Customers.Services
         }
 
         // Get All Customers
-        public async Task<IEnumerable<CustomerResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<CustomerResponseDto>> GetAllAsync(CustomerQueryParametersDto queryParameters)
         {
-            var customers = await _customerRepository.GetAllAsync();
+            var customers = await _customerRepository.GetAllAsync(queryParameters);
 
             return _mapper.Map<IEnumerable<CustomerResponseDto>>(customers);
         }

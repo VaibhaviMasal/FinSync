@@ -1,7 +1,8 @@
-﻿using FinSync.Domain.Entities;
+﻿using FinSync.Application.Features.Customers.DTOs;
+using FinSync.Application.Features.Customers.Interfaces;
+using FinSync.Domain.Entities;
 using FinSync.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-using FinSync.Application.Features.Customers.Interfaces;
 
 namespace FinSync.Persistence.Repositories
 {
@@ -98,6 +99,38 @@ namespace FinSync.Persistence.Repositories
                     c.Occupation.ToLower().Contains(keyword) ||
                     c.CompanyName.ToLower().Contains(keyword))
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Customer>> GetAllAsync(CustomerQueryParametersDto queryParameters)
+        {
+            var query = _context.Customers.AsQueryable();
+
+            // Sorting
+            switch (queryParameters.SortBy.ToLower())
+            {
+                case "firstname":
+                    query = queryParameters.SortOrder.ToLower() == "desc"
+                        ? query.OrderByDescending(c => c.FirstName)
+                        : query.OrderBy(c => c.FirstName);
+                    break;
+
+                case "annualincome":
+                    query = queryParameters.SortOrder.ToLower() == "desc"
+                        ? query.OrderByDescending(c => c.AnnualIncome)
+                        : query.OrderBy(c => c.AnnualIncome);
+                    break;
+
+                default:
+                    query = query.OrderBy(c => c.CustomerId);
+                    break;
+            }
+
+            // Pagination
+            query = query
+                .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
+                .Take(queryParameters.PageSize);
+
+            return await query.ToListAsync();
         }
     }
 }
