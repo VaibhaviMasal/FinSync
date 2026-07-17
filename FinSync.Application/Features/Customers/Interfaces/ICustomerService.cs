@@ -13,5 +13,7 @@ namespace FinSync.Application.Features.Customers.Interfaces
         Task<CustomerResponseDto?> UpdateCustomerAsync(int customerId, UpdateCustomerRequestDto request);
 
         Task<bool> DeleteCustomerAsync(int customerId);
+
+        Task<IEnumerable<CustomerResponseDto>> SearchCustomerAsync(string keyword);
     }
 }

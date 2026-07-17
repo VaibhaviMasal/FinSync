@@ -81,5 +81,23 @@ namespace FinSync.Persistence.Repositories
 
             return true;
         }
+
+        public async Task<IEnumerable<Customer>> SearchAsync(string keyword)
+        {
+            keyword = keyword.Trim().ToLower();
+
+            return await _context.Customers
+                .Where(c =>
+                    c.FirstName.ToLower().Contains(keyword) ||
+                    c.LastName.ToLower().Contains(keyword) ||
+                    c.MobileNumber.Contains(keyword) ||
+                    c.PanNumber.ToLower().Contains(keyword) ||
+                    c.AadhaarNumber.Contains(keyword) ||
+                    c.Email.ToLower().Contains(keyword) ||
+                    c.City.ToLower().Contains(keyword) ||
+                    c.Occupation.ToLower().Contains(keyword) ||
+                    c.CompanyName.ToLower().Contains(keyword))
+                .ToListAsync();
+        }
     }
 }

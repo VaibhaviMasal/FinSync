@@ -13,5 +13,7 @@ public interface ICustomerRepository
     Task<Customer?> UpdateAsync(int customerId, Customer customer);
 
     Task<bool> DeleteAsync(int customerId);
-    
+
+    Task<IEnumerable<Customer>> SearchAsync(string keyword);
+
 }

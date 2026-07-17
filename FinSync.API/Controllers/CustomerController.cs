@@ -87,5 +87,15 @@ namespace FinSync.API.Controllers
 
             return NoContent();
         }
+
+
+        // GET: api/Customer/search
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchCustomer(string keyword)
+        {
+            var customers = await _customerService.SearchCustomerAsync(keyword);
+
+            return Ok(customers);
+        }
     }
     }

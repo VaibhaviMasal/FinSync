@@ -67,5 +67,14 @@ namespace FinSync.Application.Features.Customers.Services
         {
             return await _customerRepository.DeleteAsync(customerId);
         }
+
+        // Search Customer
+        public async Task<IEnumerable<CustomerResponseDto>> SearchCustomerAsync(string keyword)
+        {
+            var customers = await _customerRepository.SearchAsync(keyword);
+
+            return _mapper.Map<IEnumerable<CustomerResponseDto>>(customers);
+        }
+
     }
     }
