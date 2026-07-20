@@ -1,3 +1,5 @@
+using FinSync.API.Extensions;
+
 using FinSync.Application.Features.Customers.Interfaces;
 using FinSync.Application.Features.Customers.Mappings;
 using FinSync.Application.Features.Customers.Services;
@@ -56,6 +58,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Global Exception Middleware
+app.UseCustomExceptionMiddleware();
 
 app.UseHttpsRedirection();
 

@@ -21,6 +21,8 @@ namespace FinSync.Application.Features.Customers.Services
         // Create Customer
         public async Task<CustomerResponseDto> CreateCustomerAsync(CreateCustomerRequestDto request)
         {
+            
+
             var customer = _mapper.Map<Customer>(request);
 
             var createdCustomer = await _customerRepository.AddAsync(customer);
