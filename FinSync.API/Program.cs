@@ -1,3 +1,4 @@
+using FinSync.Shared.Common;
 using FinSync.API.Extensions;
 
 using FinSync.Application.Features.Customers.Interfaces;
@@ -10,7 +11,7 @@ using FinSync.Persistence.Repositories;
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
-
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,24 @@ builder.Services
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCustomerRequestDtoValidator>();
 
 // Swagger
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .SelectMany(x => x.Value!.Errors)
+            .Select(x => x.ErrorMessage)
+            .ToList();
+
+        var response = ApiResponseFactory.Failure<object>(
+            "Validation failed.",
+            errors);
+
+        return new BadRequestObjectResult(response);
+    };
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -1,4 +1,5 @@
-﻿using FinSync.Application.Features.Customers.DTOs;
+﻿using FinSync.Shared.Common;
+using FinSync.Application.Features.Customers.DTOs;
 using FinSync.Application.Features.Customers.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,28 +17,36 @@ namespace FinSync.API.Controllers
         }
 
         // POST: api/Customer
+        // Create Customer
         [HttpPost]
-        public async Task<IActionResult> CreateCustomer(CreateCustomerRequestDto request)
-        {
-            var createdCustomer = await _customerService.CreateCustomerAsync(request);
+public async Task<IActionResult> CreateCustomer(CreateCustomerRequestDto request)
+{
+    var createdCustomer = await _customerService.CreateCustomerAsync(request);
 
-            return CreatedAtAction(
-                nameof(GetCustomerById),
-                new { id = createdCustomer.CustomerId },
-                createdCustomer);
-        }
+    return CreatedAtAction(
+        nameof(GetCustomerById),
+        new { id = createdCustomer.CustomerId },
+        ApiResponseFactory.Success(
+            createdCustomer,
+            "Customer created successfully."
+        ));
+}
 
         // GET: api/Customer
+        // GET All Customers
         [HttpGet]
         public async Task<IActionResult> GetAllCustomers(
             [FromQuery] CustomerQueryParametersDto queryParameters)
         {
             var customers = await _customerService.GetAllAsync(queryParameters);
 
-            return Ok(customers);
+            return Ok(ApiResponseFactory.Success(
+    customers,
+    "Customers retrieved successfully."));
         }
 
         // GET: api/Customer/5
+        // GET Customer by Id
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomerById(int id)
         {
@@ -51,10 +60,13 @@ namespace FinSync.API.Controllers
                 });
             }
 
-            return Ok(customer);
+            return Ok(ApiResponseFactory.Success(
+     customer,
+     "Customer retrieved successfully."));
         }
 
         // PUT: api/Customer/5
+        // Update Customer
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomer(
             int id,
@@ -70,10 +82,13 @@ namespace FinSync.API.Controllers
                 });
             }
 
-            return Ok(customer);
+            return Ok(ApiResponseFactory.Success(
+    customer,
+    "Customer updated successfully."));
         }
 
         // DELETE: api/Customer/5
+        // Delete Customer
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
@@ -87,16 +102,22 @@ namespace FinSync.API.Controllers
                 });
             }
 
-            return NoContent();
+            return Ok(ApiResponseFactory.Success<object>(
+    null,
+    "Customer deleted successfully."));
         }
 
         // GET: api/Customer/search?keyword=aarav
+
+        // Search Customer
         [HttpGet("search")]
         public async Task<IActionResult> SearchCustomer([FromQuery] string keyword)
         {
             var customers = await _customerService.SearchCustomerAsync(keyword);
 
-            return Ok(customers);
+            return Ok(ApiResponseFactory.Success(
+    customers,
+    "Search completed successfully."));
         }
     }
 }
