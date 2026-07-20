@@ -26,7 +26,7 @@ public async Task<IActionResult> CreateCustomer(CreateCustomerRequestDto request
     return CreatedAtAction(
         nameof(GetCustomerById),
         new { id = createdCustomer.CustomerId },
-        ApiResponseFactory.Success(
+        ApiResponseFactory.Created(
             createdCustomer,
             "Customer created successfully."
         ));
@@ -76,10 +76,9 @@ public async Task<IActionResult> CreateCustomer(CreateCustomerRequestDto request
 
             if (customer == null)
             {
-                return NotFound(new
-                {
-                    Message = $"Customer with Id {id} not found."
-                });
+                return NotFound(
+    ApiResponseFactory.NotFound<object>(
+        $"Customer with Id {id} not found."));
             }
 
             return Ok(ApiResponseFactory.Success(
