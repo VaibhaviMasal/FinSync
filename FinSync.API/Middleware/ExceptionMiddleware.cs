@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using System.Text.Json;
 using FinSync.Shared.Common;
+using FinSync.Shared.Exceptions;
 
 namespace FinSync.API.Middleware
 {
@@ -19,31 +19,54 @@ namespace FinSync.API.Middleware
             {
                 await _next(context);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await HandleExceptionAsync(context);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context)
+        private static async Task HandleExceptionAsync(
+            HttpContext context,
+            Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var response = new ApiResponse<object>
+            int statusCode;
+            string message;
+
+            switch (exception)
             {
-                Success = false,
-                Message = "An unexpected error occurred.",
-                Data = null,
-                Errors = new List<string>
-                {
-                    "Please contact the administrator if the problem persists."
-                }
-            };
+                case BadRequestException:
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
 
-            var jsonResponse = JsonSerializer.Serialize(response);
+                case UnauthorizedException:
+                    statusCode = (int)HttpStatusCode.Unauthorized;
+                    message = exception.Message;
+                    break;
 
-            await context.Response.WriteAsync(jsonResponse);
+                case NotFoundException:
+                    statusCode = (int)HttpStatusCode.NotFound;
+                    message = exception.Message;
+                    break;
+
+                case ConflictException:
+                    statusCode = (int)HttpStatusCode.Conflict;
+                    message = exception.Message;
+                    break;
+
+                default:
+                    statusCode = (int)HttpStatusCode.InternalServerError;
+                    message = "An unexpected error occurred.";
+                    break;
+            }
+
+            context.Response.StatusCode = statusCode;
+
+            var response = ApiResponseFactory.Failure<object>(message);
+
+            await context.Response.WriteAsJsonAsync(response);
         }
     }
 }

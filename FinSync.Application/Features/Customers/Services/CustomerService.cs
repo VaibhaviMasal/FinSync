@@ -2,6 +2,7 @@
 using FinSync.Application.Features.Customers.DTOs;
 using FinSync.Application.Features.Customers.Interfaces;
 using FinSync.Domain.Entities;
+using FinSync.Shared.Exceptions;
 
 namespace FinSync.Application.Features.Customers.Services
 {
@@ -21,8 +22,6 @@ namespace FinSync.Application.Features.Customers.Services
         // Create Customer
         public async Task<CustomerResponseDto> CreateCustomerAsync(CreateCustomerRequestDto request)
         {
-            
-
             var customer = _mapper.Map<Customer>(request);
 
             var createdCustomer = await _customerRepository.AddAsync(customer);
@@ -39,35 +38,38 @@ namespace FinSync.Application.Features.Customers.Services
         }
 
         // Get Customer By Id
-        public async Task<CustomerResponseDto?> GetByIdAsync(int customerId)
+        public async Task<CustomerResponseDto> GetByIdAsync(int customerId)
         {
             var customer = await _customerRepository.GetByIdAsync(customerId);
 
             if (customer == null)
-                return null;
+                throw new NotFoundException($"Customer with ID {customerId} was not found.");
 
             return _mapper.Map<CustomerResponseDto>(customer);
         }
 
         // Update Customer
-
-          public async Task<CustomerResponseDto?> UpdateCustomerAsync(int customerId, UpdateCustomerRequestDto request)
+        public async Task<CustomerResponseDto> UpdateCustomerAsync(int customerId, UpdateCustomerRequestDto request)
         {
             var customer = _mapper.Map<Customer>(request);
 
             var updatedCustomer = await _customerRepository.UpdateAsync(customerId, customer);
 
             if (updatedCustomer == null)
-                return null;
+                throw new NotFoundException($"Customer with ID {customerId} was not found.");
 
             return _mapper.Map<CustomerResponseDto>(updatedCustomer);
         }
 
         // Delete Customer
-
         public async Task<bool> DeleteCustomerAsync(int customerId)
         {
-            return await _customerRepository.DeleteAsync(customerId);
+            var deleted = await _customerRepository.DeleteAsync(customerId);
+
+            if (!deleted)
+                throw new NotFoundException($"Customer with ID {customerId} was not found.");
+
+            return true;
         }
 
         // Search Customer
@@ -77,6 +79,5 @@ namespace FinSync.Application.Features.Customers.Services
 
             return _mapper.Map<IEnumerable<CustomerResponseDto>>(customers);
         }
-
     }
-    }
+}

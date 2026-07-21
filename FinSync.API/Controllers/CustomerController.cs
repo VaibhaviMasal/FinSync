@@ -1,4 +1,6 @@
-﻿using FinSync.Shared.Common;
+﻿
+using Microsoft.AspNetCore.Authorization;
+using FinSync.Shared.Common;
 using FinSync.Application.Features.Customers.DTOs;
 using FinSync.Application.Features.Customers.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +9,7 @@ namespace FinSync.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;

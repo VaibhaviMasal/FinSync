@@ -8,9 +8,9 @@ namespace FinSync.Application.Features.Customers.Interfaces
 
         Task<IEnumerable<CustomerResponseDto>> GetAllAsync(CustomerQueryParametersDto queryParameters);
 
-        Task<CustomerResponseDto?> GetByIdAsync(int customerId);
+        Task<CustomerResponseDto> GetByIdAsync(int customerId);
 
-        Task<CustomerResponseDto?> UpdateCustomerAsync(int customerId, UpdateCustomerRequestDto request);
+        Task<CustomerResponseDto> UpdateCustomerAsync(int customerId, UpdateCustomerRequestDto request);
 
         Task<bool> DeleteCustomerAsync(int customerId);
 

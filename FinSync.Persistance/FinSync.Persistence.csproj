@@ -9,11 +9,12 @@
   <ItemGroup>
     <ProjectReference Include="..\FinSync.Application\FinSync.Application.csproj" />
     <ProjectReference Include="..\FinSync.Domain\FinSync.Domain.csproj" />
+    <ProjectReference Include="..\FinSync.Infrastructure\FinSync.Infrastructure.csproj" />
     <ProjectReference Include="..\FinSync.Shared\FinSync.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
+    <Folder Include="Identity\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

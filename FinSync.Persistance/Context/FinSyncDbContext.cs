@@ -11,4 +11,13 @@ public class FinSyncDbContext : DbContext
     }
 
     public DbSet<Customer> Customers { get; set; }
+
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(FinSyncDbContext).Assembly);
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
