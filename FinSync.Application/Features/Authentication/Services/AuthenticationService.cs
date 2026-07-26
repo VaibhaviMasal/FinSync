@@ -3,7 +3,7 @@ using FinSync.Shared.Exceptions;
 using FinSync.Application.Features.Authentication.DTOs;
 using FinSync.Application.Features.Authentication.Interfaces;
 using FinSync.Domain.Entities;
-using FinSync.Shared.Exceptions;
+
 
 namespace FinSync.Application.Features.Authentication.Services
 {

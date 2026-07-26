@@ -104,9 +104,10 @@ public async Task<IActionResult> CreateCustomer(CreateCustomerRequestDto request
                 });
             }
 
-            return Ok(ApiResponseFactory.Success<object>(
-    null,
-    "Customer deleted successfully."));
+            return Ok(
+    ApiResponseFactory.Success(
+        new { },
+        "Customer deleted successfully."));
         }
 
         // GET: api/Customer/search?keyword=aarav

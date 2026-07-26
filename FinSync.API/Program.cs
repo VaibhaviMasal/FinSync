@@ -1,33 +1,32 @@
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
-using FinSync.Infrastructure.Authentication;
+using FinSync.API.Extensions;
 using FinSync.Application.Features.Authentication.Interfaces;
 using FinSync.Application.Features.Authentication.Services;
-
-using FinSync.API.Extensions;
-
 using FinSync.Application.Features.Customers.Interfaces;
 using FinSync.Application.Features.Customers.Mappings;
 using FinSync.Application.Features.Customers.Services;
 using FinSync.Application.Features.Customers.Validators;
-
-
+using FinSync.Application.Features.InsuranceCompanies.Interfaces;
+using FinSync.Application.Features.InsuranceCompanies.Mappings;
+using FinSync.Application.Features.InsuranceCompanies.Services;
+using FinSync.Infrastructure.Authentication;
 using FinSync.Persistence.Context;
 using FinSync.Persistence.Repositories;
 using FinSync.Shared.Common;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// -------------------------------
-// Add services to the container
-// -------------------------------
+
+// -----------------------------------------------------
+// Add Controllers & FluentValidation
+// -----------------------------------------------------
 
 builder.Services
     .AddControllers()
@@ -36,10 +35,13 @@ builder.Services
         config.RegisterValidatorsFromAssemblyContaining<CreateCustomerRequestDtoValidator>();
     });
 
-// Register all validators from the assembly
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCustomerRequestDtoValidator>();
 
-// Swagger
+
+// -----------------------------------------------------
+// Custom Validation Response
+// -----------------------------------------------------
+
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.InvalidModelStateResponseFactory = context =>
@@ -58,29 +60,34 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
+
+// -----------------------------------------------------
+// Swagger
+// -----------------------------------------------------
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Description = "Enter JWT Token",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
         Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Enter JWT Token"
+        BearerFormat = "JWT"
     });
 
-    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            new OpenApiSecurityScheme
             {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                Reference = new OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
                 }
             },
             Array.Empty<string>()
@@ -88,25 +95,22 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Dependency Injection
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
 
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(CustomerMappingProfile));
+// -----------------------------------------------------
+// Database
+// -----------------------------------------------------
 
-// Database Context
 builder.Services.AddDbContext<FinSyncDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
-    ));
+        ServerVersion.AutoDetect(
+            builder.Configuration.GetConnectionString("DefaultConnection"))));
 
-// Jwt Authentication
 
-// Register the settings:
+// -----------------------------------------------------
+// JWT
+// -----------------------------------------------------
+
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));
 
@@ -114,7 +118,8 @@ var jwtSettings = builder.Configuration
     .GetSection("JwtSettings")
     .Get<JwtSettings>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -132,14 +137,42 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Register the JwtTokenService:
+
+// -----------------------------------------------------
+// Dependency Injection
+// -----------------------------------------------------
+
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+
+
+
+
+// -----------------------------------------------------
+// AutoMapper
+// -----------------------------------------------------
+
+builder.Services.AddAutoMapper(
+    typeof(CustomerMappingProfile),
+    
+    typeof(InsuranceCompanyMappingProfile));
+
+builder.Services.AddScoped<IInsuranceCompanyRepository, InsuranceCompanyRepository>();
+
+builder.Services.AddScoped<IInsuranceCompanyService, InsuranceCompanyService>();
 
 var app = builder.Build();
 
-// -------------------------------
-// Configure HTTP Request Pipeline
-// -------------------------------
+
+// -----------------------------------------------------
+// HTTP Pipeline
+// -----------------------------------------------------
 
 if (app.Environment.IsDevelopment())
 {
@@ -147,7 +180,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Global Exception Middleware
 app.UseCustomExceptionMiddleware();
 
 app.UseHttpsRedirection();

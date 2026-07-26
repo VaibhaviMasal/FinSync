@@ -58,15 +58,19 @@ namespace FinSync.API.Middleware
 
                 default:
                     statusCode = (int)HttpStatusCode.InternalServerError;
-                    message = "An unexpected error occurred.";
+                    message = exception.Message;
                     break;
             }
 
             context.Response.StatusCode = statusCode;
 
-            var response = ApiResponseFactory.Failure<object>(message);
-
-            await context.Response.WriteAsJsonAsync(response);
+            await context.Response.WriteAsJsonAsync(new
+            {
+                Success = false,
+                Message = message,
+                Exception = exception.GetType().Name,
+                StackTrace = exception.StackTrace
+            });
         }
     }
 }
