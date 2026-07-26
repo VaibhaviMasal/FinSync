@@ -31,5 +31,8 @@
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
         public DateTime? UpdatedDate { get; set; }
+
+        public ICollection<InsurancePlan> InsurancePlans { get; set; }
+    = new List<InsurancePlan>();
     }
 }
