@@ -1,5 +1,4 @@
 using FinSync.API.Extensions;
-using FinSync.Application.Features.InsurancePlans.Mappings;
 using FinSync.Application.Features.Authentication.Interfaces;
 using FinSync.Application.Features.Authentication.Services;
 using FinSync.Application.Features.Customers.Interfaces;
@@ -10,7 +9,9 @@ using FinSync.Application.Features.InsuranceCompanies.Interfaces;
 using FinSync.Application.Features.InsuranceCompanies.Mappings;
 using FinSync.Application.Features.InsuranceCompanies.Services;
 using FinSync.Application.Features.InsurancePlans.Interfaces;
+using FinSync.Application.Features.InsurancePlans.Mappings;
 using FinSync.Application.Features.InsurancePlans.Services;
+using FinSync.Application.Features.Policies.Interfaces;
 using FinSync.Infrastructure.Authentication;
 using FinSync.Persistence.Context;
 using FinSync.Persistence.Repositories;
@@ -173,6 +174,8 @@ builder.Services.AddScoped<IInsuranceCompanyService, InsuranceCompanyService>();
 builder.Services.AddScoped<IInsurancePlanRepository, InsurancePlanRepository>();
 
 builder.Services.AddScoped<IInsurancePlanService, InsurancePlanService>();
+
+builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
 
 var app = builder.Build();
 
