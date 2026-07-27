@@ -4,6 +4,8 @@ using FinSync.Application.Features.InsuranceCompanies.Interfaces;
 using FinSync.Application.Features.InsurancePlans.Interfaces;
 using FinSync.Application.Features.Policies.DTOs;
 using FinSync.Application.Features.Policies.Interfaces;
+using FinSync.Domain.Entities;
+using FinSync.Shared.Exceptions;
 
 namespace FinSync.Application.Features.Policies.Services
 {
@@ -29,9 +31,77 @@ namespace FinSync.Application.Features.Policies.Services
             _mapper = mapper;
         }
 
-        public Task<PolicyResponseDto> CreatePolicyAsync(CreatePolicyRequestDto request)
+        public async Task<PolicyResponseDto> CreatePolicyAsync(
+    CreatePolicyRequestDto request)
         {
-            throw new NotImplementedException();
+            // Customer Exists
+            var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
+
+            if (customer == null)
+            {
+                throw new NotFoundException(
+                    $"Customer with ID {request.CustomerId} was not found.");
+            }
+
+            // Company Exists
+            var company = await _companyRepository.GetByIdAsync(request.CompanyId);
+
+            if (company == null)
+            {
+                throw new NotFoundException(
+                    $"Insurance Company with ID {request.CompanyId} was not found.");
+            }
+
+            // Plan Exists
+            var plan = await _planRepository.GetByIdAsync(request.PlanId);
+
+            if (plan == null)
+            {
+                throw new NotFoundException(
+                    $"Insurance Plan with ID {request.PlanId} was not found.");
+            }
+
+            // Plan belongs to Company
+            if (plan.CompanyId != request.CompanyId)
+            {
+                throw new BadRequestException(
+                    "The selected Insurance Plan does not belong to the selected Insurance Company.");
+            }
+
+            // Duplicate Policy Number
+            if (await _repository.ExistsByPolicyNumberAsync(request.PolicyNumber))
+            {
+                throw new ConflictException(
+                    $"Policy Number '{request.PolicyNumber}' already exists.");
+            }
+
+            // Premium Validation
+            if (request.PremiumAmount <= 0)
+            {
+                throw new BadRequestException(
+                    "Premium Amount must be greater than zero.");
+            }
+
+            // Sum Assured Validation
+            if (request.SumAssured < plan.MinimumSumAssured ||
+                request.SumAssured > plan.MaximumSumAssured)
+            {
+                throw new BadRequestException(
+                    $"Sum Assured must be between {plan.MinimumSumAssured} and {plan.MaximumSumAssured}.");
+            }
+
+            // Date Validation
+            if (request.StartDate > request.EndDate)
+            {
+                throw new BadRequestException(
+                    "Start Date cannot be later than End Date.");
+            }
+
+            var policy = _mapper.Map<Policy>(request);
+
+            var createdPolicy = await _repository.AddAsync(policy);
+
+            return _mapper.Map<PolicyResponseDto>(createdPolicy);
         }
 
         public Task<IEnumerable<PolicyResponseDto>> GetAllAsync(PolicyQueryParametersDto queryParameters)
