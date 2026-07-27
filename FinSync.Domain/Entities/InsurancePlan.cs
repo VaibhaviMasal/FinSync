@@ -36,5 +36,8 @@ namespace FinSync.Domain.Entities
 
         // Navigation Property
         public InsuranceCompany InsuranceCompany { get; set; } = null!;
+
+        public ICollection<Policy> Policies { get; set; } = new List<Policy>();
+
     }
 }

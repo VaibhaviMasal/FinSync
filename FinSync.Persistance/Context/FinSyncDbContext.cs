@@ -24,4 +24,6 @@ public class FinSyncDbContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
+
+    public DbSet<Policy> Policies { get; set; }
 }

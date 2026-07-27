@@ -34,5 +34,7 @@
 
         public ICollection<InsurancePlan> InsurancePlans { get; set; }
     = new List<InsurancePlan>();
+
+        public ICollection<Policy> Policies { get; set; } = new List<Policy>();
     }
 }

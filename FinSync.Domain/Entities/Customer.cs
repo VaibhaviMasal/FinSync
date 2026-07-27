@@ -47,4 +47,7 @@ public class Customer
     public DateTime CreatedDate { get; set; }
     public DateTime? UpdatedDate { get; set; }
     public bool IsActive { get; set; }
+
+    // Navigation Properties
+    public ICollection<Policy> Policies { get; set; } = new List<Policy>();
 }
