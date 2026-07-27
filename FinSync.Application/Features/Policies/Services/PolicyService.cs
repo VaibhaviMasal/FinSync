@@ -104,14 +104,25 @@ namespace FinSync.Application.Features.Policies.Services
             return _mapper.Map<PolicyResponseDto>(createdPolicy);
         }
 
-        public Task<IEnumerable<PolicyResponseDto>> GetAllAsync(PolicyQueryParametersDto queryParameters)
+        public async Task<IEnumerable<PolicyResponseDto>> GetAllAsync(
+     PolicyQueryParametersDto queryParameters)
         {
-            throw new NotImplementedException();
+            var policies = await _repository.GetAllAsync(queryParameters);
+
+            return _mapper.Map<IEnumerable<PolicyResponseDto>>(policies);
         }
 
-        public Task<PolicyResponseDto> GetByIdAsync(int policyId)
+        public async Task<PolicyResponseDto> GetByIdAsync(int policyId)
         {
-            throw new NotImplementedException();
+            var policy = await _repository.GetByIdAsync(policyId);
+
+            if (policy == null)
+            {
+                throw new NotFoundException(
+                    $"Policy with ID {policyId} was not found.");
+            }
+
+            return _mapper.Map<PolicyResponseDto>(policy);
         }
 
         public Task<PolicyResponseDto> UpdatePolicyAsync(int policyId, UpdatePolicyRequestDto request)
