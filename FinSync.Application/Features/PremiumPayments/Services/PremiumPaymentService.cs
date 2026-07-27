@@ -99,19 +99,80 @@ namespace FinSync.Application.Features.PremiumPayments.Services
             return _mapper.Map<PremiumPaymentResponseDto>(payment);
         }
 
-        public Task<PremiumPaymentResponseDto> UpdatePremiumPaymentAsync(int premiumPaymentId, UpdatePremiumPaymentRequestDto request)
+        public async Task<PremiumPaymentResponseDto> UpdatePremiumPaymentAsync(
+    int premiumPaymentId,
+    UpdatePremiumPaymentRequestDto request)
         {
-            throw new NotImplementedException();
+            var policy = await _policyRepository.GetByIdAsync(request.PolicyId);
+
+            if (policy == null)
+            {
+                throw new NotFoundException(
+                    $"Policy with ID {request.PolicyId} was not found.");
+            }
+
+            if (request.DueDate < DateOnly.FromDateTime(policy.StartDate))
+            {
+                throw new BadRequestException(
+                    "Due Date cannot be earlier than the Policy Start Date.");
+            }
+
+            if (request.Amount <= 0)
+            {
+                throw new BadRequestException(
+                    "Amount must be greater than zero.");
+            }
+
+            var payment = _mapper.Map<PremiumPayment>(request);
+
+            // Preserve business rules
+            payment.ReceiptNumber = $"RCPT-{DateTime.UtcNow:yyyyMMddHHmmss}";
+            payment.UpdatedDate = DateTime.UtcNow;
+
+            if (request.PaymentDate.HasValue)
+            {
+                payment.PaymentStatus = PaymentStatus.Paid;
+            }
+            else if (request.DueDate < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                payment.PaymentStatus = PaymentStatus.Overdue;
+            }
+            else
+            {
+                payment.PaymentStatus = PaymentStatus.Pending;
+            }
+
+            var updatedPayment = await _repository.UpdateAsync(
+                premiumPaymentId,
+                payment);
+
+            if (updatedPayment == null)
+            {
+                throw new NotFoundException(
+                    $"Premium Payment with ID {premiumPaymentId} was not found.");
+            }
+
+            return _mapper.Map<PremiumPaymentResponseDto>(updatedPayment);
         }
 
-        public Task<bool> DeletePremiumPaymentAsync(int premiumPaymentId)
+        public async Task<bool> DeletePremiumPaymentAsync(int premiumPaymentId)
         {
-            throw new NotImplementedException();
+            var deleted = await _repository.DeleteAsync(premiumPaymentId);
+
+            if (!deleted)
+            {
+                throw new NotFoundException(
+                    $"Premium Payment with ID {premiumPaymentId} was not found.");
+            }
+
+            return true;
         }
 
-        public Task<IEnumerable<PremiumPaymentResponseDto>> SearchAsync(string keyword)
+        public async Task<IEnumerable<PremiumPaymentResponseDto>> SearchAsync(string keyword)
         {
-            throw new NotImplementedException();
+            var payments = await _repository.SearchAsync(keyword);
+
+            return _mapper.Map<IEnumerable<PremiumPaymentResponseDto>>(payments);
         }
 
         public async Task<IEnumerable<PremiumPaymentResponseDto>> GetPaymentsByPolicyAsync(int policyId)
