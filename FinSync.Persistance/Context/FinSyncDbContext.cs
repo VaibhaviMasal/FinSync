@@ -26,4 +26,6 @@ public class FinSyncDbContext : DbContext
     }
 
     public DbSet<Policy> Policies { get; set; }
+
+    public DbSet<PremiumPayment> PremiumPayments { get; set; }
 }

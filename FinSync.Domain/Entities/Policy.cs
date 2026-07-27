@@ -42,5 +42,9 @@
         public InsuranceCompany InsuranceCompany { get; set; } = null!;
 
         public InsurancePlan InsurancePlan { get; set; } = null!;
+
+        public ICollection<PremiumPayment> PremiumPayments { get; set; }
+    = new List<PremiumPayment>();
+
     }
 }
