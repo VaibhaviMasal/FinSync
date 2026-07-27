@@ -125,19 +125,106 @@ namespace FinSync.Application.Features.Policies.Services
             return _mapper.Map<PolicyResponseDto>(policy);
         }
 
-        public Task<PolicyResponseDto> UpdatePolicyAsync(int policyId, UpdatePolicyRequestDto request)
+        public async Task<PolicyResponseDto> UpdatePolicyAsync(
+    int policyId,
+    UpdatePolicyRequestDto request)
         {
-            throw new NotImplementedException();
+            // Check Customer Exists
+            var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
+
+            if (customer == null)
+            {
+                throw new NotFoundException(
+                    $"Customer with ID {request.CustomerId} was not found.");
+            }
+
+            // Check Company Exists
+            var company = await _companyRepository.GetByIdAsync(request.CompanyId);
+
+            if (company == null)
+            {
+                throw new NotFoundException(
+                    $"Insurance Company with ID {request.CompanyId} was not found.");
+            }
+
+            // Check Plan Exists
+            var plan = await _planRepository.GetByIdAsync(request.PlanId);
+
+            if (plan == null)
+            {
+                throw new NotFoundException(
+                    $"Insurance Plan with ID {request.PlanId} was not found.");
+            }
+
+            // Check Plan belongs to Company
+            if (plan.CompanyId != request.CompanyId)
+            {
+                throw new BadRequestException(
+                    "The selected Insurance Plan does not belong to the selected Insurance Company.");
+            }
+
+            // Duplicate Policy Number
+            if (await _repository.ExistsByPolicyNumberAsync(
+                request.PolicyNumber,
+                policyId))
+            {
+                throw new ConflictException(
+                    $"Policy Number '{request.PolicyNumber}' already exists.");
+            }
+
+            // Premium Validation
+            if (request.PremiumAmount <= 0)
+            {
+                throw new BadRequestException(
+                    "Premium Amount must be greater than zero.");
+            }
+
+            // Sum Assured Validation
+            if (request.SumAssured < plan.MinimumSumAssured ||
+                request.SumAssured > plan.MaximumSumAssured)
+            {
+                throw new BadRequestException(
+                    $"Sum Assured must be between {plan.MinimumSumAssured} and {plan.MaximumSumAssured}.");
+            }
+
+            // Date Validation
+            if (request.StartDate > request.EndDate)
+            {
+                throw new BadRequestException(
+                    "Start Date cannot be later than End Date.");
+            }
+
+            var policy = _mapper.Map<Policy>(request);
+
+            var updatedPolicy = await _repository.UpdateAsync(policyId, policy);
+
+            if (updatedPolicy == null)
+            {
+                throw new NotFoundException(
+                    $"Policy with ID {policyId} was not found.");
+            }
+
+            return _mapper.Map<PolicyResponseDto>(updatedPolicy);
         }
 
-        public Task<bool> DeletePolicyAsync(int policyId)
+        public async Task<bool> DeletePolicyAsync(int policyId)
         {
-            throw new NotImplementedException();
+            var deleted = await _repository.DeleteAsync(policyId);
+
+            if (!deleted)
+            {
+                throw new NotFoundException(
+                    $"Policy with ID {policyId} was not found.");
+            }
+
+            return true;
         }
 
-        public Task<IEnumerable<PolicyResponseDto>> SearchAsync(string keyword)
+        public async Task<IEnumerable<PolicyResponseDto>> SearchAsync(string keyword)
         {
-            throw new NotImplementedException();
+            var policies = await _repository.SearchAsync(keyword);
+
+            return _mapper.Map<IEnumerable<PolicyResponseDto>>(policies);
         }
     }
 }
