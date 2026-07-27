@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Authentication\Mappings\" />
-    <Folder Include="Features\PremiumPayments\Repositories\" />
   </ItemGroup>
 
 </Project>
