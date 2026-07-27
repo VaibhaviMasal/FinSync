@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FinSync.Persistence.Configurations
 {
-    public class RenewalConfiguration : IEntityTypeConfiguration<Renewal>
+    public class RenewalConfiguration : IEntityTypeConfiguration<PolicyRenewal>
     {
-        public void Configure(EntityTypeBuilder<Renewal> builder)
+        public void Configure(EntityTypeBuilder<PolicyRenewal> builder)
         {
             builder.HasKey(x => x.RenewalId);
 

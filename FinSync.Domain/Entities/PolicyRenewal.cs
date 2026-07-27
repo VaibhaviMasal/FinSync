@@ -2,7 +2,7 @@
 
 namespace FinSync.Domain.Entities
 {
-    public class Renewal
+    public class PolicyRenewal
     {
         public int RenewalId { get; set; }
 
