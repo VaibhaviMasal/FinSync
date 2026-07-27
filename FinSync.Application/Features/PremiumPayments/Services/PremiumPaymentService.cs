@@ -78,14 +78,25 @@ namespace FinSync.Application.Features.PremiumPayments.Services
             return _mapper.Map<PremiumPaymentResponseDto>(createdPayment);
         }
 
-        public Task<IEnumerable<PremiumPaymentResponseDto>> GetAllAsync(PremiumPaymentQueryParametersDto queryParameters)
+        public async Task<IEnumerable<PremiumPaymentResponseDto>> GetAllAsync(
+    PremiumPaymentQueryParametersDto queryParameters)
         {
-            throw new NotImplementedException();
+            var payments = await _repository.GetAllAsync(queryParameters);
+
+            return _mapper.Map<IEnumerable<PremiumPaymentResponseDto>>(payments);
         }
 
-        public Task<PremiumPaymentResponseDto> GetByIdAsync(int premiumPaymentId)
+        public async Task<PremiumPaymentResponseDto> GetByIdAsync(int premiumPaymentId)
         {
-            throw new NotImplementedException();
+            var payment = await _repository.GetByIdAsync(premiumPaymentId);
+
+            if (payment == null)
+            {
+                throw new NotFoundException(
+                    $"Premium Payment with ID {premiumPaymentId} was not found.");
+            }
+
+            return _mapper.Map<PremiumPaymentResponseDto>(payment);
         }
 
         public Task<PremiumPaymentResponseDto> UpdatePremiumPaymentAsync(int premiumPaymentId, UpdatePremiumPaymentRequestDto request)
@@ -103,19 +114,25 @@ namespace FinSync.Application.Features.PremiumPayments.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<PremiumPaymentResponseDto>> GetPaymentsByPolicyAsync(int policyId)
+        public async Task<IEnumerable<PremiumPaymentResponseDto>> GetPaymentsByPolicyAsync(int policyId)
         {
-            throw new NotImplementedException();
+            var payments = await _repository.GetPaymentsByPolicyAsync(policyId);
+
+            return _mapper.Map<IEnumerable<PremiumPaymentResponseDto>>(payments);
         }
 
-        public Task<IEnumerable<PremiumPaymentResponseDto>> GetPendingPaymentsAsync()
+        public async Task<IEnumerable<PremiumPaymentResponseDto>> GetPendingPaymentsAsync()
         {
-            throw new NotImplementedException();
+            var payments = await _repository.GetPendingPaymentsAsync();
+
+            return _mapper.Map<IEnumerable<PremiumPaymentResponseDto>>(payments);
         }
 
-        public Task<IEnumerable<PremiumPaymentResponseDto>> GetOverduePaymentsAsync()
+        public async Task<IEnumerable<PremiumPaymentResponseDto>> GetOverduePaymentsAsync()
         {
-            throw new NotImplementedException();
+            var payments = await _repository.GetOverduePaymentsAsync();
+
+            return _mapper.Map<IEnumerable<PremiumPaymentResponseDto>>(payments);
         }
     }
 }
