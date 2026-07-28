@@ -13,11 +13,13 @@ using FinSync.Application.Features.InsurancePlans.Mappings;
 using FinSync.Application.Features.InsurancePlans.Services;
 using FinSync.Application.Features.Policies.Interfaces;
 using FinSync.Application.Features.Policies.Services;
+using FinSync.Application.Features.PolicyRenewals.Interfaces;
+using FinSync.Application.Features.PolicyRenewals.Services;
 using FinSync.Application.Features.PremiumPayments.Interfaces;
 using FinSync.Application.Features.PremiumPayments.Services;
 using FinSync.Infrastructure.Authentication;
 using FinSync.Persistence.Context;
-
+using FinSync.Persistence.Repositories;
 using FinSync.Shared.Common;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -27,9 +29,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-
-using FinSync.Application.Features.PolicyRenewals.Interfaces;
-using FinSync.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -189,7 +188,7 @@ builder.Services.AddScoped<IPremiumPaymentRepository, PremiumPaymentRepository>(
 
 builder.Services.AddScoped<IPremiumPaymentService, PremiumPaymentService>();
 
-
+builder.Services.AddScoped<IPolicyRenewalService, PolicyRenewalService>();
 
 
 
