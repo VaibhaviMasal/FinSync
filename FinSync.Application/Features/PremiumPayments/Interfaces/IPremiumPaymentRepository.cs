@@ -5,7 +5,7 @@ namespace FinSync.Application.Features.PremiumPayments.Interfaces
 {
     public interface IPremiumPaymentRepository
     {
-        // CRUD Operations
+        //CRUD operations for PremiumPayment entity
         Task<PremiumPayment> AddAsync(PremiumPayment premiumPayment);
 
         Task<IEnumerable<PremiumPayment>> GetAllAsync(
@@ -21,7 +21,7 @@ namespace FinSync.Application.Features.PremiumPayments.Interfaces
 
         Task<IEnumerable<PremiumPayment>> SearchAsync(string keyword);
 
-        // Business Operations
+        // Business operations for PremiumPayment entity
         Task<IEnumerable<PremiumPayment>> GetPaymentsByPolicyAsync(int policyId);
 
         Task<IEnumerable<PremiumPayment>> GetPendingPaymentsAsync();

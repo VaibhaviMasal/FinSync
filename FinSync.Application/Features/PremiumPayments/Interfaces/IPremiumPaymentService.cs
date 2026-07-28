@@ -20,7 +20,6 @@ namespace FinSync.Application.Features.PremiumPayments.Interfaces
 
         Task<IEnumerable<PremiumPaymentResponseDto>> SearchAsync(string keyword);
 
-        // Business Methods
         Task<IEnumerable<PremiumPaymentResponseDto>> GetPaymentsByPolicyAsync(int policyId);
 
         Task<IEnumerable<PremiumPaymentResponseDto>> GetPendingPaymentsAsync();

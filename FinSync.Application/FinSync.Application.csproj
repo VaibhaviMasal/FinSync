@@ -7,16 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="obj\Debug\net9.0\.NETCoreApp,Version=v9.0.AssemblyAttributes.cs" />
-    <Compile Include="obj\Debug\net9.0\FinSync.Application.AssemblyInfo.cs" />
-    <Compile Include="obj\Debug\net9.0\FinSync.Application.GlobalUsings.g.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="obj\Debug\net9.0\FinSync.Application.csproj.FileListAbsolute.txt" />
-    <Content Include="obj\Debug\net9.0\FinSync.Application.sourcelink.json" />
-    <Content Include="obj\FinSync.Application.csproj.nuget.dgspec.json" />
-    <Content Include="obj\project.assets.json" />
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,23 +29,6 @@
     <Folder Include="Features\PolicyRenewals\Interfaces\" />
     <Folder Include="Features\PolicyRenewals\Validators\" />
     <Folder Include="Features\PolicyRenewals\Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="obj\Debug\net9.0\FinSync..2D962BAA.Up2Date" />
-    <None Include="obj\Debug\net9.0\FinSync.Application.AssemblyInfoInputs.cache" />
-    <None Include="obj\Debug\net9.0\FinSync.Application.assets.cache" />
-    <None Include="obj\Debug\net9.0\FinSync.Application.csproj.AssemblyReference.cache" />
-    <None Include="obj\Debug\net9.0\FinSync.Application.csproj.BuildWithSkipAnalyzers" />
-    <None Include="obj\Debug\net9.0\FinSync.Application.csproj.CoreCompileInputs.cache" />
-    <None Include="obj\Debug\net9.0\FinSync.Application.dll" />
-    <None Include="obj\Debug\net9.0\FinSync.Application.GeneratedMSBuildEditorConfig.editorconfig" />
-    <None Include="obj\Debug\net9.0\FinSync.Application.pdb" />
-    <None Include="obj\Debug\net9.0\refint\FinSync.Application.dll" />
-    <None Include="obj\Debug\net9.0\ref\FinSync.Application.dll" />
-    <None Include="obj\FinSync.Application.csproj.nuget.g.props" />
-    <None Include="obj\FinSync.Application.csproj.nuget.g.targets" />
-    <None Include="obj\project.nuget.cache" />
   </ItemGroup>
 
 </Project>

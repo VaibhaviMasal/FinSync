@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using FinSync.Application.Features.Policies.Interfaces;
 using FinSync.Application.Features.PremiumPayments.DTOs;
-using FinSync.Application.Features.PremiumPayments.Interfaces;
+
 using FinSync.Domain.Entities;
 using FinSync.Domain.Enums;
 using FinSync.Shared.Exceptions;
+
+using FinSync.Application.Features.PremiumPayments.Interfaces;
 
 namespace FinSync.Application.Features.PremiumPayments.Services
 {

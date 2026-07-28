@@ -46,7 +46,7 @@
         public ICollection<PremiumPayment> PremiumPayments { get; set; }
     = new List<PremiumPayment>();
 
-        public ICollection<PolicyRenewal> Renewals { get; set; }
+        public ICollection<PolicyRenewal> PolicyRenewals { get; set; }
     = new List<PolicyRenewal>();
 
     }

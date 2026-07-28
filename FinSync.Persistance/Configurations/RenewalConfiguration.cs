@@ -23,7 +23,7 @@ namespace FinSync.Persistence.Configurations
                 .IsRequired();
 
             builder.HasOne(x => x.Policy)
-                .WithMany(x => x.Renewals)
+                .WithMany(x => x.PolicyRenewals)
                 .HasForeignKey(x => x.PolicyId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
