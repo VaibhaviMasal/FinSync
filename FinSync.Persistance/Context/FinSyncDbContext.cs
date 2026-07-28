@@ -19,6 +19,8 @@ public class FinSyncDbContext : DbContext
     public DbSet<InsurancePlan> InsurancePlans { get; set; }
 
     public DbSet<PolicyRenewal> Renewals { get; set; }
+
+    public DbSet<PolicyRenewal> PolicyRenewals { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FinSyncDbContext).Assembly);
