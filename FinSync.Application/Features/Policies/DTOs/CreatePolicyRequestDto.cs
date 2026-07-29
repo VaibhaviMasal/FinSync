@@ -1,4 +1,6 @@
-﻿namespace FinSync.Application.Features.Policies.DTOs;
+﻿using FinSync.Domain.Enums;
+
+namespace FinSync.Application.Features.Policies.DTOs;
 
 public class CreatePolicyRequestDto
 {
@@ -18,7 +20,7 @@ public class CreatePolicyRequestDto
 
     public decimal PremiumAmount { get; set; }
 
-    public string PremiumFrequency { get; set; } = string.Empty;
+    public PremiumFrequency PremiumFrequency { get; set; }
 
     public decimal SumAssured { get; set; }
 

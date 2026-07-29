@@ -50,9 +50,9 @@ namespace FinSync.Persistence.Configurations
 
             // Relationship
             builder.HasOne(x => x.InsuranceCompany)
-                   .WithMany()
-                   .HasForeignKey(x => x.CompanyId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(x => x.InsurancePlans)
+                .HasForeignKey(x => x.CompanyId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

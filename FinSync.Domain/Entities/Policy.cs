@@ -1,4 +1,6 @@
-﻿namespace FinSync.Domain.Entities
+﻿using FinSync.Domain.Enums;
+
+namespace FinSync.Domain.Entities
 {
     public class Policy
     {
@@ -20,7 +22,8 @@
 
         public decimal PremiumAmount { get; set; }
 
-        public string PremiumFrequency { get; set; } = string.Empty;
+
+        public PremiumFrequency PremiumFrequency { get; set; }
 
         public decimal SumAssured { get; set; }
 
@@ -36,12 +39,17 @@
 
         public DateTime? UpdatedDate { get; set; }
 
+        public int AgentId { get; set; } 
+
         // Navigation Properties
         public Customer Customer { get; set; } = null!;
 
         public InsuranceCompany InsuranceCompany { get; set; } = null!;
 
         public InsurancePlan InsurancePlan { get; set; } = null!;
+
+        public Agent Agent { get; set; } = null!;
+
 
         public ICollection<PremiumPayment> PremiumPayments { get; set; }
     = new List<PremiumPayment>();

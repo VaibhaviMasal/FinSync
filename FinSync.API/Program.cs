@@ -190,6 +190,7 @@ builder.Services.AddScoped<IPremiumPaymentService, PremiumPaymentService>();
 
 builder.Services.AddScoped<IPolicyRenewalService, PolicyRenewalService>();
 
+builder.Services.AddScoped<IPolicyRenewalRepository, PolicyRenewalRepository>();
 
 
 

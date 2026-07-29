@@ -39,9 +39,10 @@ public class CreatePolicyRequestValidator : AbstractValidator<CreatePolicyReques
             .WithMessage("Start Date cannot be later than End Date.");
 
         RuleFor(x => x.PremiumFrequency)
-            .IsInEnum().WithMessage("Valid Premium Frequency is required.");
+    .IsInEnum()
+    .WithMessage("Valid Premium Frequency is required.");
 
-        
+
 
         RuleFor(x => x.NomineeName)
             .NotEmpty().WithMessage("Nominee Name is required.");

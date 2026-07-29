@@ -8,6 +8,8 @@ namespace FinSync.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<PolicyRenewal> builder)
         {
+            builder.ToTable("Renewals");
+
             builder.HasKey(x => x.RenewalId);
 
             builder.Property(x => x.RenewalPremium)

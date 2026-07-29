@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinSync.Persistence.Migrations
 {
     [DbContext(typeof(FinSyncDbContext))]
-    [Migration("20260727083049_AddPremiumPayment")]
-    partial class AddPremiumPayment
+    [Migration("20260729073602_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,102 @@ namespace FinSync.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("FinSync.Domain.Entities.Agent", b =>
+                {
+                    b.Property<int>("AgentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("AgentId"));
+
+                    b.Property<string>("AadhaarNumber")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("varchar(12)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("AlternateMobileNumber")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
+
+                    b.Property<DateTime>("JoiningDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("LicenseNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("MiddleName")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("MobileNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("PanNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("Pincode")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("varchar(6)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("AgentId");
+
+                    b.ToTable("Agents");
+                });
 
             modelBuilder.Entity("FinSync.Domain.Entities.ApplicationUser", b =>
                 {
@@ -322,6 +418,9 @@ namespace FinSync.Persistence.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("PolicyId"));
 
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
@@ -369,10 +468,9 @@ namespace FinSync.Persistence.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("PremiumFrequency")
-                        .IsRequired()
+                    b.Property<int>("PremiumFrequency")
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
@@ -386,6 +484,8 @@ namespace FinSync.Persistence.Migrations
 
                     b.HasKey("PolicyId");
 
+                    b.HasIndex("AgentId");
+
                     b.HasIndex("CompanyId");
 
                     b.HasIndex("CustomerId");
@@ -396,6 +496,51 @@ namespace FinSync.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Policies", (string)null);
+                });
+
+            modelBuilder.Entity("FinSync.Domain.Entities.PolicyRenewal", b =>
+                {
+                    b.Property<int>("RenewalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("RenewalId"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateOnly>("NewExpiryDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("OldExpiryDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PolicyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateOnly>("RenewalDate")
+                        .HasColumnType("date");
+
+                    b.Property<decimal>("RenewalPremium")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("RenewalStatus")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("RenewalId");
+
+                    b.HasIndex("PolicyId");
+
+                    b.ToTable("Renewals", (string)null);
                 });
 
             modelBuilder.Entity("FinSync.Domain.Entities.PremiumPayment", b =>
@@ -469,6 +614,12 @@ namespace FinSync.Persistence.Migrations
 
             modelBuilder.Entity("FinSync.Domain.Entities.Policy", b =>
                 {
+                    b.HasOne("FinSync.Domain.Entities.Agent", "Agent")
+                        .WithMany("Policies")
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("FinSync.Domain.Entities.InsuranceCompany", "InsuranceCompany")
                         .WithMany("Policies")
                         .HasForeignKey("CompanyId")
@@ -487,11 +638,24 @@ namespace FinSync.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Agent");
+
                     b.Navigation("Customer");
 
                     b.Navigation("InsuranceCompany");
 
                     b.Navigation("InsurancePlan");
+                });
+
+            modelBuilder.Entity("FinSync.Domain.Entities.PolicyRenewal", b =>
+                {
+                    b.HasOne("FinSync.Domain.Entities.Policy", "Policy")
+                        .WithMany("PolicyRenewals")
+                        .HasForeignKey("PolicyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Policy");
                 });
 
             modelBuilder.Entity("FinSync.Domain.Entities.PremiumPayment", b =>
@@ -503,6 +667,11 @@ namespace FinSync.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Policy");
+                });
+
+            modelBuilder.Entity("FinSync.Domain.Entities.Agent", b =>
+                {
+                    b.Navigation("Policies");
                 });
 
             modelBuilder.Entity("FinSync.Domain.Entities.Customer", b =>
@@ -524,6 +693,8 @@ namespace FinSync.Persistence.Migrations
 
             modelBuilder.Entity("FinSync.Domain.Entities.Policy", b =>
                 {
+                    b.Navigation("PolicyRenewals");
+
                     b.Navigation("PremiumPayments");
                 });
 #pragma warning restore 612, 618
