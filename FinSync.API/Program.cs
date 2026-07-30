@@ -1,4 +1,6 @@
 using FinSync.API.Extensions;
+using FinSync.Application.Features.Agents.Interfaces;
+using FinSync.Application.Features.Agents.Services;
 using FinSync.Application.Features.Authentication.Interfaces;
 using FinSync.Application.Features.Authentication.Services;
 using FinSync.Application.Features.Customers.Interfaces;
@@ -192,7 +194,9 @@ builder.Services.AddScoped<IPolicyRenewalService, PolicyRenewalService>();
 
 builder.Services.AddScoped<IPolicyRenewalRepository, PolicyRenewalRepository>();
 
+builder.Services.AddScoped<IAgentRepository, AgentRepository>();
 
+builder.Services.AddScoped<IAgentService, AgentService>();
 
 var app = builder.Build();
 
