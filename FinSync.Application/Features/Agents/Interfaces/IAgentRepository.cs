@@ -5,24 +5,16 @@ namespace FinSync.Application.Features.Agents.Interfaces
 {
     public interface IAgentRepository
     {
-        // CRUD
         Task<Agent> AddAsync(Agent agent);
+
+        Task<IEnumerable<Agent>> GetAllAsync(AgentQueryParametersDto queryParameters);
 
         Task<Agent?> GetByIdAsync(int agentId);
 
-        Task<IEnumerable<Agent>> GetAllAsync();
+        Task<Agent?> UpdateAsync(int agentId, Agent agent);
 
-        Task UpdateAsync(Agent agent);
+        Task<bool> DeleteAsync(int agentId);
 
-        Task DeleteAsync(Agent agent);
-
-        // Search & Filtering
-        Task<(IEnumerable<Agent> Agents, int TotalCount)> GetFilteredAsync(
-            AgentQueryParametersDto queryParameters);
-
-        // Utility
-        Task<bool> ExistsAsync(int agentId);
-
-        Task SaveChangesAsync();
+        Task<IEnumerable<Agent>> SearchAsync(string keyword);
     }
 }
