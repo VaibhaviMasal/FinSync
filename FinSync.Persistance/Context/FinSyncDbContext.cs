@@ -26,7 +26,7 @@ public class FinSyncDbContext : DbContext
 
     public DbSet<Agent> Agents { get; set; }
 
-
+    public DbSet<InsuranceClaim> InsuranceClaims { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

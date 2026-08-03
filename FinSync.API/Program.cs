@@ -3,10 +3,14 @@ using FinSync.Application.Features.Agents.Interfaces;
 using FinSync.Application.Features.Agents.Services;
 using FinSync.Application.Features.Authentication.Interfaces;
 using FinSync.Application.Features.Authentication.Services;
+using FinSync.Application.Features.Claims.Interfaces;
+using FinSync.Application.Features.Claims.Services;
 using FinSync.Application.Features.Customers.Interfaces;
 using FinSync.Application.Features.Customers.Mappings;
 using FinSync.Application.Features.Customers.Services;
 using FinSync.Application.Features.Customers.Validators;
+using FinSync.Application.Features.Dashboard.Interfaces;
+using FinSync.Application.Features.Dashboard.Services;
 using FinSync.Application.Features.InsuranceCompanies.Interfaces;
 using FinSync.Application.Features.InsuranceCompanies.Mappings;
 using FinSync.Application.Features.InsuranceCompanies.Services;
@@ -31,6 +35,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -197,6 +203,14 @@ builder.Services.AddScoped<IPolicyRenewalRepository, PolicyRenewalRepository>();
 builder.Services.AddScoped<IAgentRepository, AgentRepository>();
 
 builder.Services.AddScoped<IAgentService, AgentService>();
+
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
+
+builder.Services.AddScoped<IClaimService, ClaimService>();
 
 var app = builder.Build();
 

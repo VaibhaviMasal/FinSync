@@ -1,10 +1,11 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using FinSync.Application.Features.Authentication.Interfaces;
+﻿using FinSync.Application.Features.Authentication.Interfaces;
 using FinSync.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using SecurityClaim = System.Security.Claims.Claim;
 
 namespace FinSync.Infrastructure.Authentication
 {
@@ -26,13 +27,13 @@ namespace FinSync.Infrastructure.Authentication
                 key,
                 SecurityAlgorithms.HmacSha256);
 
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.FullName),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+            var claims = new List<SecurityClaim>
+           {
+              new SecurityClaim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+              new SecurityClaim(JwtRegisteredClaimNames.Email, user.Email),
+              new SecurityClaim(ClaimTypes.Name, user.FullName),
+              new SecurityClaim(ClaimTypes.Role, user.Role)
+           };
 
             var token = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
