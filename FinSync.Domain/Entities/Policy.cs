@@ -57,8 +57,8 @@ namespace FinSync.Domain.Entities
         public ICollection<PolicyRenewal> PolicyRenewals { get; set; }
     = new List<PolicyRenewal>();
 
-        public ICollection<InsuranceClaim> InsuaranceClaims { get; set; }
-            = new List<InsuranceClaim>();
+        public ICollection<InsuranceClaim> InsuranceClaims { get; set; }
+    = new List<InsuranceClaim>();
 
     }
 }
