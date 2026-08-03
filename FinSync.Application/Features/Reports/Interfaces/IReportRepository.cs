@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FinSync.Application.Features.Reports.DTOs;
 
 namespace FinSync.Application.Features.Reports.Interfaces
 {
-    internal interface IReportRepository
+    public interface IReportRepository
     {
+        Task<IEnumerable<ActivePolicyReportDto>> GetActivePoliciesAsync(ReportFilterDto filter);
+
+        Task<IEnumerable<ExpiringPolicyReportDto>> GetExpiringPoliciesAsync(ReportFilterDto filter);
+
+        Task<PremiumCollectionReportDto> GetPremiumCollectionAsync(ReportFilterDto filter);
+
+        Task<IEnumerable<AgentPerformanceReportDto>> GetAgentPerformanceAsync(ReportFilterDto filter);
+
+        Task<IEnumerable<CompanyBusinessReportDto>> GetCompanyBusinessAsync(ReportFilterDto filter);
+
+        Task<IEnumerable<ClaimReportDto>> GetClaimReportAsync(ReportFilterDto filter);
+
+        Task<DashboardReportDto> GetDashboardReportAsync();
     }
 }
