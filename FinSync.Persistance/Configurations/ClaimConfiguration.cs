@@ -38,7 +38,7 @@ namespace FinSync.Persistence.Configurations
                 .HasConversion<string>();
 
             builder.HasOne(x => x.Policy)
-                .WithMany(x => x.InsuaranceClaims)
+                .WithMany(x => x.InsuranceClaims)
                 .HasForeignKey(x => x.PolicyId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
