@@ -15,9 +15,61 @@ namespace FinSync.Persistence.Repositories
             _context = context;
         }
 
-        public Task<IEnumerable<ActivePolicyReportDto>> GetActivePoliciesAsync(ReportFilterDto filter)
+        public async Task<IEnumerable<ActivePolicyReportDto>> GetActivePoliciesAsync(ReportFilterDto filter)
         {
-            throw new NotImplementedException();
+            var query = GetPolicyReportQuery()
+                .Where(p => p.PolicyStatus == "Active");
+
+            // Apply Filters
+            if (filter.CompanyId.HasValue)
+            {
+                query = query.Where(p => p.CompanyId == filter.CompanyId.Value);
+            }
+
+            if (filter.AgentId.HasValue)
+            {
+                query = query.Where(p => p.AgentId == filter.AgentId.Value);
+            }
+
+            if (filter.FromDate.HasValue)
+            {
+                query = query.Where(p => p.StartDate >= filter.FromDate.Value);
+            }
+
+            if (filter.ToDate.HasValue)
+            {
+                query = query.Where(p => p.EndDate <= filter.ToDate.Value);
+            }
+
+            // Sorting
+            query = filter.SortOrder.ToLower() == "desc"
+                ? query.OrderByDescending(p => p.PolicyNumber)
+                : query.OrderBy(p => p.PolicyNumber);
+
+            // Pagination
+            query = query
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize);
+
+            return await query.Select(p => new ActivePolicyReportDto
+            {
+                PolicyNumber = p.PolicyNumber,
+
+                CustomerName = p.Customer.FirstName + " " + p.Customer.LastName,
+
+                CompanyName = p.InsuranceCompany.CompanyName,
+
+                PlanName = p.InsurancePlan.PlanName,
+
+                StartDate = p.StartDate,
+
+                EndDate = p.EndDate,
+
+                PremiumAmount = p.PremiumAmount,
+
+                AgentName = p.Agent.FirstName + " " + p.Agent.LastName
+            })
+            .ToListAsync();
         }
 
         public Task<IEnumerable<AgentPerformanceReportDto>> GetAgentPerformanceAsync(ReportFilterDto filter)
