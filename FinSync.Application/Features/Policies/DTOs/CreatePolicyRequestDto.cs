@@ -12,6 +12,8 @@ public class CreatePolicyRequestDto
 
     public int PlanId { get; set; }
 
+    public int AgentId { get; set; }
+
     public DateTime IssueDate { get; set; }
 
     public DateTime StartDate { get; set; }

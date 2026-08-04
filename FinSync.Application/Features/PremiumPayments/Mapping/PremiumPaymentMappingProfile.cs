@@ -1,19 +1,18 @@
-﻿namespace FinSync.Application.Features.PremiumPayments.DTOs
+﻿using AutoMapper;
+using FinSync.Application.Features.PremiumPayments.DTOs;
+using FinSync.Domain.Entities;
+
+namespace FinSync.Application.Features.PremiumPayments.Mapping
 {
-    public class PremiumPaymentQueryParameterDto
+    public class PremiumPaymentMappingProfile : Profile
     {
-        public string? SearchTerm { get; set; }
+        public PremiumPaymentMappingProfile()
+        {
+            CreateMap<CreatePremiumPaymentRequestDto, PremiumPayment>();
 
-        public string? SortBy { get; set; } = "DueDate";
+            CreateMap<UpdatePremiumPaymentRequestDto, PremiumPayment>();
 
-        public bool IsDescending { get; set; } = false;
-
-        public int PageNumber { get; set; } = 1;
-
-        public int PageSize { get; set; } = 10;
-
-        public int? PolicyId { get; set; }
-
-        public string? PaymentStatus { get; set; }
+            CreateMap<PremiumPayment, PremiumPaymentResponseDto>();
+        }
     }
 }

@@ -23,6 +23,8 @@ using FinSync.Application.Features.PolicyRenewals.Interfaces;
 using FinSync.Application.Features.PolicyRenewals.Services;
 using FinSync.Application.Features.PremiumPayments.Interfaces;
 using FinSync.Application.Features.PremiumPayments.Services;
+using FinSync.Application.Features.Reports.Interfaces;
+using FinSync.Application.Features.Reports.Services;
 using FinSync.Infrastructure.Authentication;
 using FinSync.Persistence.Context;
 using FinSync.Persistence.Repositories;
@@ -211,6 +213,10 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
 
 builder.Services.AddScoped<IClaimService, ClaimService>();
+
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+
+builder.Services.AddScoped<IReportService, ReportService>();
 
 var app = builder.Build();
 
