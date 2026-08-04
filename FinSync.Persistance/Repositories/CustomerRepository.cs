@@ -64,9 +64,7 @@ namespace FinSync.Persistence.Repositories
 
             return existingCustomer;
 
-            await _context.SaveChangesAsync();
-
-            return existingCustomer;
+            
         }
 
         public async Task<bool> DeleteAsync(int customerId)

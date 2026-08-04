@@ -76,12 +76,92 @@ namespace FinSync.Persistence.Repositories
 
         public async Task<DashboardRecentActivityDto> GetRecentActivityAsync()
         {
-            throw new NotImplementedException();
+            var recentCustomers = await _context.Customers
+                .OrderByDescending(c => c.CreatedDate)
+                .Take(5)
+                .Select(c => new RecentCustomerDto
+                {
+                    CustomerId = c.CustomerId,
+                    FullName = c.FirstName + " " + c.LastName,
+                    CreatedDate = c.CreatedDate
+                })
+                .ToListAsync();
+
+            var recentPolicies = await _context.Policies
+                .Include(p => p.Customer)
+                .Include(p => p.InsuranceCompany)
+                .OrderByDescending(p => p.CreatedDate)
+                .Take(5)
+                .Select(p => new RecentPolicyDto
+                {
+                    PolicyId = p.PolicyId,
+                    PolicyNumber = p.PolicyNumber,
+                    CustomerName = p.Customer.FirstName + " " + p.Customer.LastName,
+                    IssueDate = p.CreatedDate,
+                    CompanyName = p.InsuranceCompany.CompanyName
+                })
+                .ToListAsync();
+
+            var recentPayments = await _context.PremiumPayments
+                 .OrderByDescending(p => p.CreatedDate)
+                 .Take(5)
+                 .Select(p => new RecentPaymentDto
+                 {
+                    PremiumPaymentId = p.PremiumPaymentId,
+                    Amount = p.Amount,
+                    DueDate = p.DueDate,
+                    PaymentStatus = p.PaymentStatus
+                 })
+                .ToListAsync();
+
+            return new DashboardRecentActivityDto
+            {
+                RecentCustomers = recentCustomers,
+                RecentPolicies = recentPolicies,
+                RecentPayments = recentPayments
+            };
         }
 
         public async Task<DashboardAnalyticsDto> GetDashboardAnalyticsAsync()
         {
-            throw new NotImplementedException();
+            var analytics = new DashboardAnalyticsDto();
+
+            // Policies By Company
+            analytics.PoliciesByCompany = await _context.InsuranceCompanies
+                .Select(c => new CompanyAnalyticsDto
+                {
+                    CompanyName = c.CompanyName,
+                    TotalPolicies = c.Policies.Count
+                })
+                .OrderByDescending(c => c.TotalPolicies)
+                .ToListAsync();
+
+            // Top Agents
+            analytics.TopAgents = await _context.Agents
+                .Select(a => new AgentAnalyticsDto
+                {
+                   AgentId = a.AgentId,
+                   AgentName = a.FirstName + " " + a.LastName,
+                   TotalPolicies = a.Policies.Count()
+                })
+                   .OrderByDescending(a => a.TotalPolicies)
+                   .Take(5)
+                   .ToListAsync();
+
+            // Monthly Premium Collection
+            analytics.MonthlyPremiumCollection = await _context.PremiumPayments
+                .GroupBy(p => new { p.CreatedDate.Year, p.CreatedDate.Month })
+                .Select(g => new MonthlyPremiumDto
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    TotalPremium = g.Sum(x => x.Amount)
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToListAsync();
+
+            return analytics;
         }
 
 

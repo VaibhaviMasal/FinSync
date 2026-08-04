@@ -6,16 +6,13 @@ using FinSync.Application.Features.Authentication.Services;
 using FinSync.Application.Features.Claims.Interfaces;
 using FinSync.Application.Features.Claims.Services;
 using FinSync.Application.Features.Customers.Interfaces;
-using FinSync.Application.Features.Customers.Mappings;
 using FinSync.Application.Features.Customers.Services;
 using FinSync.Application.Features.Customers.Validators;
 using FinSync.Application.Features.Dashboard.Interfaces;
 using FinSync.Application.Features.Dashboard.Services;
 using FinSync.Application.Features.InsuranceCompanies.Interfaces;
-using FinSync.Application.Features.InsuranceCompanies.Mappings;
 using FinSync.Application.Features.InsuranceCompanies.Services;
 using FinSync.Application.Features.InsurancePlans.Interfaces;
-using FinSync.Application.Features.InsurancePlans.Mappings;
 using FinSync.Application.Features.InsurancePlans.Services;
 using FinSync.Application.Features.Policies.Interfaces;
 using FinSync.Application.Features.Policies.Services;
@@ -38,13 +35,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 
 // -----------------------------------------------------
-// Add Controllers & FluentValidation
+// Controllers & FluentValidation
 // -----------------------------------------------------
 
 builder.Services
@@ -127,7 +122,29 @@ builder.Services.AddDbContext<FinSyncDbContext>(options =>
 
 
 // -----------------------------------------------------
-// JWT
+// AutoMapper
+// -----------------------------------------------------
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+// -----------------------------------------------------
+// CORS (React Frontend)
+// -----------------------------------------------------
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactApp", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
+// -----------------------------------------------------
+// JWT Authentication
 // -----------------------------------------------------
 
 builder.Services.Configure<JwtSettings>(
@@ -161,62 +178,51 @@ builder.Services
 // Dependency Injection
 // -----------------------------------------------------
 
+// Authentication
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+// Customer
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 
-
-
-
-// -----------------------------------------------------
-// AutoMapper
-// -----------------------------------------------------
-
-builder.Services.AddAutoMapper(
-    typeof(CustomerMappingProfile),
-    typeof(InsuranceCompanyMappingProfile),
-    typeof(InsurancePlanMappingProfile));
-
-builder.Services.AddScoped<IInsuranceCompanyRepository, InsuranceCompanyRepository>();
-
-builder.Services.AddScoped<IInsuranceCompanyService, InsuranceCompanyService>();
-
-builder.Services.AddScoped<IInsurancePlanRepository, InsurancePlanRepository>();
-
-builder.Services.AddScoped<IInsurancePlanService, InsurancePlanService>();
-
-builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
-
-builder.Services.AddScoped<IPolicyService, PolicyService>();
-
-builder.Services.AddScoped<IPremiumPaymentRepository, PremiumPaymentRepository>();
-
-builder.Services.AddScoped<IPremiumPaymentService, PremiumPaymentService>();
-
-builder.Services.AddScoped<IPolicyRenewalService, PolicyRenewalService>();
-
-builder.Services.AddScoped<IPolicyRenewalRepository, PolicyRenewalRepository>();
-
+// Agent
 builder.Services.AddScoped<IAgentRepository, AgentRepository>();
-
 builder.Services.AddScoped<IAgentService, AgentService>();
 
-builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+// Insurance Company
+builder.Services.AddScoped<IInsuranceCompanyRepository, InsuranceCompanyRepository>();
+builder.Services.AddScoped<IInsuranceCompanyService, InsuranceCompanyService>();
 
+// Insurance Plan
+builder.Services.AddScoped<IInsurancePlanRepository, InsurancePlanRepository>();
+builder.Services.AddScoped<IInsurancePlanService, InsurancePlanService>();
+
+// Policy
+builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
+builder.Services.AddScoped<IPolicyService, PolicyService>();
+
+// Premium Payment
+builder.Services.AddScoped<IPremiumPaymentRepository, PremiumPaymentRepository>();
+builder.Services.AddScoped<IPremiumPaymentService, PremiumPaymentService>();
+
+// Policy Renewal
+builder.Services.AddScoped<IPolicyRenewalRepository, PolicyRenewalRepository>();
+builder.Services.AddScoped<IPolicyRenewalService, PolicyRenewalService>();
+
+// Dashboard
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
+// Claim
 builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
-
 builder.Services.AddScoped<IClaimService, ClaimService>();
 
+// Reports
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
-
 builder.Services.AddScoped<IReportService, ReportService>();
+
 
 var app = builder.Build();
 
@@ -234,6 +240,8 @@ if (app.Environment.IsDevelopment())
 app.UseCustomExceptionMiddleware();
 
 app.UseHttpsRedirection();
+
+app.UseCors("ReactApp");
 
 app.UseAuthentication();
 

@@ -4,9 +4,9 @@ using FinSync.Domain.Entities;
 
 namespace FinSync.Application.Features.PolicyRenewals.Mapping
 {
-    public class PolicyRenewalProfile : Profile
+    public class PolicyRenewalMappingProfile : Profile
     {
-        public PolicyRenewalProfile()
+        public PolicyRenewalMappingProfile()
         {
             CreateMap<CreatePolicyRenewalRequestDto, PolicyRenewal>();
 

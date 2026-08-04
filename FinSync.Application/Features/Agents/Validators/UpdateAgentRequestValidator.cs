@@ -47,6 +47,14 @@ namespace FinSync.Application.Features.Agents.Validators
             RuleFor(x => x.Pincode)
                 .NotEmpty()
                 .Length(6);
+
+            RuleFor(x => x.DateOfBirth)
+                .LessThan(DateOnly.FromDateTime(DateTime.Today))
+                .WithMessage("Date of Birth must be in the past.");
+
+            RuleFor(x => x.JoiningDate)
+                .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
+                .WithMessage("Joining Date cannot be in the future.");
         }
     }
 }

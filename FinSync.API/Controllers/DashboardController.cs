@@ -27,5 +27,22 @@ namespace FinSync.API.Controllers
             var result = await _dashboardService.GetDashboardAlertsAsync();
             return Ok(result);
         }
+
+        [HttpGet("recent-activity")]
+        public async Task<IActionResult> GetRecentActivity()
+        {
+            var result = await _dashboardService.GetRecentActivityAsync();
+
+            return Ok(result);
+        }
+
+
+        [HttpGet("analytics")]
+        public async Task<IActionResult> GetDashboardAnalytics()
+        {
+            var result = await _dashboardService.GetDashboardAnalyticsAsync();
+
+            return Ok(result);
+        }
     }
 }

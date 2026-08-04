@@ -20,7 +20,9 @@ namespace FinSync.Application.Features.Customers.Mappings
                     opt => opt.Ignore());
 
             // Customer Response
-            CreateMap<Customer, CustomerResponseDto>();
+            CreateMap<Customer, CustomerResponseDto>()
+              .ForMember(dest => dest.DateOfBirth,
+               opt => opt.MapFrom(src => DateOnly.FromDateTime(src.DateOfBirth)));
 
             //  UpdateCustomer 
             CreateMap<UpdateCustomerRequestDto, Customer>();
