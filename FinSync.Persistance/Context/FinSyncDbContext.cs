@@ -30,6 +30,8 @@ public class FinSyncDbContext : DbContext
 
     public DbSet<Document> Documents { get; set; }
 
+    public DbSet<Notification> Notifications { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FinSyncDbContext).Assembly);

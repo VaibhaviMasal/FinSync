@@ -38,6 +38,9 @@ using System.Text;
 using FinSync.Application.Features.Documents.Interfaces;
 using FinSync.Application.Features.Documents.Services;
 
+using FinSync.Application.Features.Notifications.Interfaces;
+using FinSync.Application.Features.Notifications.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -229,6 +232,10 @@ builder.Services.AddScoped<IReportService, ReportService>();
 // Documents
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+
+// Notifications
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var app = builder.Build();
 
