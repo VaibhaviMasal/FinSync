@@ -35,6 +35,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
+using FinSync.Application.Features.Documents.Interfaces;
+using FinSync.Application.Features.Documents.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -223,6 +226,9 @@ builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
+// Documents
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 
 var app = builder.Build();
 

@@ -60,5 +60,8 @@ namespace FinSync.Domain.Entities
         public ICollection<InsuranceClaim> InsuranceClaims { get; set; }
     = new List<InsuranceClaim>();
 
+        public ICollection<Document> Documents { get; set; }
+    = new List<Document>();
+
     }
 }
