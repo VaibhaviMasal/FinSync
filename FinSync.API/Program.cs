@@ -41,6 +41,9 @@ using FinSync.Application.Features.Documents.Services;
 using FinSync.Application.Features.Notifications.Interfaces;
 using FinSync.Application.Features.Notifications.Services;
 
+using FinSync.Application.Features.Settings.Interfaces;
+using FinSync.Application.Features.Settings.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -236,6 +239,10 @@ builder.Services.AddScoped<IDocumentService, DocumentService>();
 // Notifications
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+
+// Settings
+builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 var app = builder.Build();
 
