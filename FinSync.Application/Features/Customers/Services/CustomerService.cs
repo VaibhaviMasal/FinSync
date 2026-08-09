@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FinSync.Application.Features.AuditLogs.Interfaces; // ✅ ADD
 using FinSync.Application.Features.Customers.DTOs;
 using FinSync.Application.Features.Customers.Interfaces;
 using FinSync.Domain.Entities;
@@ -10,13 +11,16 @@ namespace FinSync.Application.Features.Customers.Services
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IMapper _mapper;
+        private readonly IAuditLogService _auditLogService; // ✅ ADD
 
         public CustomerService(
             ICustomerRepository customerRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IAuditLogService auditLogService) // ✅ ADD
         {
             _customerRepository = customerRepository;
             _mapper = mapper;
+            _auditLogService = auditLogService; // ✅ ADD
         }
 
         // Create Customer
@@ -25,6 +29,14 @@ namespace FinSync.Application.Features.Customers.Services
             var customer = _mapper.Map<Customer>(request);
 
             var createdCustomer = await _customerRepository.AddAsync(customer);
+
+            // ✅ AUDIT LOG
+            await _auditLogService.AddAsync(
+                "Customer Created",
+                "Customer",
+                createdCustomer.CustomerId,
+                "Admin"
+            );
 
             return _mapper.Map<CustomerResponseDto>(createdCustomer);
         }
@@ -58,6 +70,14 @@ namespace FinSync.Application.Features.Customers.Services
             if (updatedCustomer == null)
                 throw new NotFoundException($"Customer with ID {customerId} was not found.");
 
+            // ✅ AUDIT LOG
+            await _auditLogService.AddAsync(
+                "Customer Updated",
+                "Customer",
+                customerId,
+                "Admin"
+            );
+
             return _mapper.Map<CustomerResponseDto>(updatedCustomer);
         }
 
@@ -68,6 +88,14 @@ namespace FinSync.Application.Features.Customers.Services
 
             if (!deleted)
                 throw new NotFoundException($"Customer with ID {customerId} was not found.");
+
+            // ✅ AUDIT LOG
+            await _auditLogService.AddAsync(
+                "Customer Deleted",
+                "Customer",
+                customerId,
+                "Admin"
+            );
 
             return true;
         }

@@ -1,4 +1,6 @@
-﻿namespace FinSync.Application.Features.Customers.DTOs
+﻿using FinSync.Domain.Enums;
+
+namespace FinSync.Application.Features.Customers.DTOs
 {
     public class UpdateCustomerRequestDto
     {
@@ -8,9 +10,9 @@
 
         public string LastName { get; set; } = string.Empty;
 
-        public int Gender { get; set; }
+        public Gender Gender { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         public string MobileNumber { get; set; } = string.Empty;
 

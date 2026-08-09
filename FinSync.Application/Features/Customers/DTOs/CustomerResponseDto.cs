@@ -1,4 +1,5 @@
 ﻿using FinSync.Domain.Enums;
+using System;
 
 namespace FinSync.Application.Features.Customers.DTOs
 {
@@ -14,7 +15,7 @@ namespace FinSync.Application.Features.Customers.DTOs
 
         public Gender Gender { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         public string MobileNumber { get; set; } = string.Empty;
 

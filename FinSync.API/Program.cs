@@ -1,6 +1,8 @@
 using FinSync.API.Extensions;
 using FinSync.Application.Features.Agents.Interfaces;
 using FinSync.Application.Features.Agents.Services;
+using FinSync.Application.Features.AuditLogs.Interfaces;
+using FinSync.Application.Features.AuditLogs.Services;
 using FinSync.Application.Features.Authentication.Interfaces;
 using FinSync.Application.Features.Authentication.Services;
 using FinSync.Application.Features.Claims.Interfaces;
@@ -10,10 +12,14 @@ using FinSync.Application.Features.Customers.Services;
 using FinSync.Application.Features.Customers.Validators;
 using FinSync.Application.Features.Dashboard.Interfaces;
 using FinSync.Application.Features.Dashboard.Services;
+using FinSync.Application.Features.Documents.Interfaces;
+using FinSync.Application.Features.Documents.Services;
 using FinSync.Application.Features.InsuranceCompanies.Interfaces;
 using FinSync.Application.Features.InsuranceCompanies.Services;
 using FinSync.Application.Features.InsurancePlans.Interfaces;
 using FinSync.Application.Features.InsurancePlans.Services;
+using FinSync.Application.Features.Notifications.Interfaces;
+using FinSync.Application.Features.Notifications.Services;
 using FinSync.Application.Features.Policies.Interfaces;
 using FinSync.Application.Features.Policies.Services;
 using FinSync.Application.Features.PolicyRenewals.Interfaces;
@@ -22,6 +28,8 @@ using FinSync.Application.Features.PremiumPayments.Interfaces;
 using FinSync.Application.Features.PremiumPayments.Services;
 using FinSync.Application.Features.Reports.Interfaces;
 using FinSync.Application.Features.Reports.Services;
+using FinSync.Application.Features.Settings.Interfaces;
+using FinSync.Application.Features.Settings.Services;
 using FinSync.Infrastructure.Authentication;
 using FinSync.Persistence.Context;
 using FinSync.Persistence.Repositories;
@@ -35,20 +43,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-using FinSync.Application.Features.Documents.Interfaces;
-using FinSync.Application.Features.Documents.Services;
-
-using FinSync.Application.Features.Notifications.Interfaces;
-using FinSync.Application.Features.Notifications.Services;
-
-using FinSync.Application.Features.Settings.Interfaces;
-using FinSync.Application.Features.Settings.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 
-
 // -----------------------------------------------------
-// Controllers & FluentValidation
+// Controllers + FluentValidation
 // -----------------------------------------------------
 
 builder.Services
@@ -59,7 +57,6 @@ builder.Services
     });
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCustomerRequestDtoValidator>();
-
 
 // -----------------------------------------------------
 // Custom Validation Response
@@ -82,7 +79,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
         return new BadRequestObjectResult(response);
     };
 });
-
 
 // -----------------------------------------------------
 // Swagger
@@ -118,7 +114,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
 // -----------------------------------------------------
 // Database
 // -----------------------------------------------------
@@ -129,16 +124,14 @@ builder.Services.AddDbContext<FinSyncDbContext>(options =>
         ServerVersion.AutoDetect(
             builder.Configuration.GetConnectionString("DefaultConnection"))));
 
-
 // -----------------------------------------------------
-// AutoMapper
+// AutoMapper (IMPORTANT FIX)
 // -----------------------------------------------------
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-
 // -----------------------------------------------------
-// CORS (React Frontend)
+// CORS
 // -----------------------------------------------------
 
 builder.Services.AddCors(options =>
@@ -150,7 +143,6 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
-
 
 // -----------------------------------------------------
 // JWT Authentication
@@ -182,73 +174,60 @@ builder.Services
         };
     });
 
-
 // -----------------------------------------------------
 // Dependency Injection
 // -----------------------------------------------------
 
-// Authentication
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-// Customer
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 
-// Agent
 builder.Services.AddScoped<IAgentRepository, AgentRepository>();
 builder.Services.AddScoped<IAgentService, AgentService>();
 
-// Insurance Company
 builder.Services.AddScoped<IInsuranceCompanyRepository, InsuranceCompanyRepository>();
 builder.Services.AddScoped<IInsuranceCompanyService, InsuranceCompanyService>();
 
-// Insurance Plan
 builder.Services.AddScoped<IInsurancePlanRepository, InsurancePlanRepository>();
 builder.Services.AddScoped<IInsurancePlanService, InsurancePlanService>();
 
-// Policy
 builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
 builder.Services.AddScoped<IPolicyService, PolicyService>();
 
-// Premium Payment
 builder.Services.AddScoped<IPremiumPaymentRepository, PremiumPaymentRepository>();
 builder.Services.AddScoped<IPremiumPaymentService, PremiumPaymentService>();
 
-// Policy Renewal
 builder.Services.AddScoped<IPolicyRenewalRepository, PolicyRenewalRepository>();
 builder.Services.AddScoped<IPolicyRenewalService, PolicyRenewalService>();
 
-// Dashboard
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
-// Claim
 builder.Services.AddScoped<IClaimRepository, ClaimRepository>();
 builder.Services.AddScoped<IClaimService, ClaimService>();
 
-// Reports
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
-// Documents
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 
-// Notifications
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
-// Settings
 builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 
+builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+
 var app = builder.Build();
 
-
 // -----------------------------------------------------
-// HTTP Pipeline
+// Pipeline
 // -----------------------------------------------------
 
 if (app.Environment.IsDevelopment())

@@ -8,24 +8,29 @@ namespace FinSync.Application.Features.Customers.Mappings
     {
         public CustomerMappingProfile()
         {
-            // Create Customer
+            // ✅ Create Customer
             CreateMap<CreateCustomerRequestDto, Customer>()
-                .ForMember(dest => dest.DateOfBirth,
-                    opt => opt.MapFrom(src => src.DateOfBirth.ToDateTime(TimeOnly.MinValue)))
-                .ForMember(dest => dest.CreatedDate,
-                    opt => opt.MapFrom(_ => DateTime.UtcNow))
-                .ForMember(dest => dest.IsActive,
-                    opt => opt.MapFrom(_ => true))
-                .ForMember(dest => dest.UpdatedDate,
-                    opt => opt.Ignore());
+    .ForMember(dest => dest.DateOfBirth,
+        opt => opt.MapFrom(src =>
+            new DateTime(src.DateOfBirth.Year, src.DateOfBirth.Month, src.DateOfBirth.Day)))
+    .ForMember(dest => dest.CreatedDate,
+        opt => opt.MapFrom(_ => DateTime.UtcNow))
+    .ForMember(dest => dest.IsActive,
+        opt => opt.MapFrom(_ => true))
+    .ForMember(dest => dest.UpdatedDate,
+        opt => opt.Ignore());
 
-            // Customer Response
             CreateMap<Customer, CustomerResponseDto>()
-              .ForMember(dest => dest.DateOfBirth,
-               opt => opt.MapFrom(src => DateOnly.FromDateTime(src.DateOfBirth)));
+                .ForMember(dest => dest.DateOfBirth,
+                    opt => opt.MapFrom(src =>
+                        DateOnly.FromDateTime(src.DateOfBirth)));
 
-            //  UpdateCustomer 
-            CreateMap<UpdateCustomerRequestDto, Customer>();
+            CreateMap<UpdateCustomerRequestDto, Customer>()
+                .ForMember(dest => dest.DateOfBirth,
+                    opt => opt.MapFrom(src =>
+                        new DateTime(src.DateOfBirth.Year, src.DateOfBirth.Month, src.DateOfBirth.Day)))
+                .ForMember(dest => dest.UpdatedDate,
+                    opt => opt.MapFrom(_ => DateTime.UtcNow));
         }
     }
 }
