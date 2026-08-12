@@ -24,6 +24,7 @@ interface Customer {
 
 const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -87,8 +88,8 @@ const CustomerPage = () => {
         alert("Customer Added ✅");
       }
 
-      // reset form
       setEditingId(null);
+
       setFormData({
         firstName: "",
         lastName: "",
@@ -130,8 +131,8 @@ const CustomerPage = () => {
     setEditingId(customer.customerId!);
 
     setFormData({
-      firstName: customer.FirstName ?? customer.firstName,
-      lastName: customer.LastName ?? customer.lastName,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
       gender: customer.gender || 0,
       dateOfBirth: customer.dateOfBirth,
       mobileNumber: customer.mobileNumber,
@@ -144,6 +145,18 @@ const CustomerPage = () => {
       aadhaarNumber: customer.aadhaarNumber,
     });
   };
+
+  // ---------------- SEARCH FILTER ----------------
+  const filteredCustomers = customers.filter((c) => {
+    const keyword = search.toLowerCase();
+
+    return (
+      c.firstName.toLowerCase().includes(keyword) ||
+      c.lastName.toLowerCase().includes(keyword) ||
+      c.mobileNumber.includes(keyword) ||
+      c.city.toLowerCase().includes(keyword)
+    );
+  });
 
   return (
     <div style={{ padding: "30px", maxWidth: "1000px", margin: "0 auto" }}>
@@ -202,14 +215,29 @@ const CustomerPage = () => {
           : "Add Customer"}
       </button>
 
-      {/* LIST */}
-      <h2 style={{ marginTop: "30px" }}>Customer List</h2>
+      {/* SEARCH */}
+      <input
+        type="text"
+        placeholder="Search by name, mobile, city..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          marginTop: "30px",
+          padding: "10px",
+          width: "100%",
+          borderRadius: "5px",
+          border: "1px solid #ccc",
+        }}
+      />
 
-      {customers.length === 0 ? (
+      {/* LIST */}
+      <h2 style={{ marginTop: "20px" }}>Customer List</h2>
+
+      {filteredCustomers.length === 0 ? (
         <p>No customers found.</p>
       ) : (
         <ul style={{ listStyle: "none", padding: 0 }}>
-          {customers.map((c, index) => (
+          {filteredCustomers.map((c, index) => (
             <li
               key={c.customerId ?? index}
               style={{
@@ -221,12 +249,10 @@ const CustomerPage = () => {
                 marginBottom: "8px",
               }}
             >
-              {/* LEFT */}
               <div>
                 <strong>{c.firstName} {c.lastName}</strong> - {c.mobileNumber}
               </div>
 
-              {/* RIGHT */}
               <div style={{ display: "flex", gap: "10px" }}>
                 <button
                   onClick={() => handleEdit(c)}
