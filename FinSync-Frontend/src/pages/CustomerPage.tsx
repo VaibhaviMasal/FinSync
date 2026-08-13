@@ -146,7 +146,7 @@ const CustomerPage = () => {
     });
   };
 
-  // ---------------- SEARCH FILTER ----------------
+  // ---------------- SEARCH ----------------
   const filteredCustomers = customers.filter((c) => {
     const keyword = search.toLowerCase();
 
@@ -158,8 +158,38 @@ const CustomerPage = () => {
     );
   });
 
+  // ---------------- STYLES ----------------
+  const thStyle = {
+    padding: "12px",
+    textAlign: "left" as const,
+    borderBottom: "2px solid #ddd",
+  };
+
+  const tdStyle = {
+    padding: "10px",
+    borderBottom: "1px solid #eee",
+  };
+
+  const editBtn = {
+    backgroundColor: "#2563eb",
+    color: "white",
+    border: "none",
+    padding: "6px 12px",
+    borderRadius: "5px",
+    cursor: "pointer",
+  };
+
+  const deleteBtn = {
+    backgroundColor: "#dc2626",
+    color: "white",
+    border: "none",
+    padding: "6px 12px",
+    borderRadius: "5px",
+    cursor: "pointer",
+  };
+
   return (
-    <div style={{ padding: "30px", maxWidth: "1000px", margin: "0 auto" }}>
+    <div style={{ padding: "30px", maxWidth: "1100px", margin: "0 auto" }}>
       <h1>Customer Management</h1>
 
       {/* FORM */}
@@ -230,61 +260,63 @@ const CustomerPage = () => {
         }}
       />
 
-      {/* LIST */}
+      {/* TABLE */}
       <h2 style={{ marginTop: "20px" }}>Customer List</h2>
 
       {filteredCustomers.length === 0 ? (
         <p>No customers found.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {filteredCustomers.map((c, index) => (
-            <li
-              key={c.customerId ?? index}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "10px",
-                borderBottom: "1px solid #ddd",
-                marginBottom: "8px",
-              }}
-            >
-              <div>
-                <strong>{c.firstName} {c.lastName}</strong> - {c.mobileNumber}
-              </div>
+        <div style={{ marginTop: "20px", overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              backgroundColor: "white",
+            }}
+          >
+            <thead style={{ backgroundColor: "#f3f4f6" }}>
+              <tr>
+                <th style={thStyle}>Name</th>
+                <th style={thStyle}>Mobile</th>
+                <th style={thStyle}>Email</th>
+                <th style={thStyle}>City</th>
+                <th style={thStyle}>Actions</th>
+              </tr>
+            </thead>
 
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  onClick={() => handleEdit(c)}
-                  style={{
-                    backgroundColor: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    padding: "6px 12px",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
+            <tbody>
+              {filteredCustomers.map((c, index) => (
+                <tr
+                  key={c.customerId ?? index}
+                  style={{ transition: "0.2s" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#f9fafb")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.backgroundColor = "white")
+                  }
                 >
-                  Edit
-                </button>
+                  <td style={tdStyle}>{c.firstName} {c.lastName}</td>
+                  <td style={tdStyle}>{c.mobileNumber}</td>
+                  <td style={tdStyle}>{c.email}</td>
+                  <td style={tdStyle}>{c.city}</td>
 
-                <button
-                  onClick={() => handleDelete(c.customerId!)}
-                  style={{
-                    backgroundColor: "#dc2626",
-                    color: "white",
-                    border: "none",
-                    padding: "6px 12px",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+                  <td style={tdStyle}>
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <button onClick={() => handleEdit(c)} style={editBtn}>
+                        Edit
+                      </button>
+
+                      <button onClick={() => handleDelete(c.customerId!)} style={deleteBtn}>
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
